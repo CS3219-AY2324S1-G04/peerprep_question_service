@@ -8,7 +8,7 @@ export interface IQuestion extends Document {
 }
 
 export interface IQuestionRequestBody {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   categories: Array<string>;

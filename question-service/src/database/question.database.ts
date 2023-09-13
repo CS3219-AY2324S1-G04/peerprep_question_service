@@ -16,7 +16,8 @@ export class QuestionService {
 
     
     public findAndUpdate(body : IQuestionRequestBody) : Promise<IQuestion | null> {
-        const id = body.id;
+        console.log(body);
+        const id = body._id;
         return Question.findByIdAndUpdate(id, 
             {
                 title: body.title,

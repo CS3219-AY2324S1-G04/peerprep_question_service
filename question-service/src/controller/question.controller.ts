@@ -24,7 +24,7 @@ export class QuestionController {
     this.router.route("/").post(this.addQuestion);
 
     // updates a question to the question repository
-    this.router.route("/update/:id").post();
+    this.router.route("/").put(this.updateQuestion);
 
     // deletes a question to 
     this.router.route("/:id").delete(this.findAndDelete);
@@ -85,7 +85,7 @@ export class QuestionController {
   private updateQuestion = async (req: Request, res: Response) => {
     try {
       const body : IQuestionRequestBody = req.body;
-      const question = await this.questionService;
+      const question = await this.questionService.findAndUpdate(body);
       res.send(question);
     } catch (e) {
       if (e instanceof Error) {
