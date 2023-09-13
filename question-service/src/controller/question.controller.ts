@@ -62,7 +62,11 @@ export class QuestionController {
     try {
       const complexity : string = req.params.complexity;
       const question = await this.questionService.findByComplexity(complexity);
-      res.send(question);
+      if (question === null) {
+        res.status(404).send("No questions exist");
+      } else {
+        res.send(question);
+      }
     } catch (e) {
       if (e instanceof Error) {
         res.status(500).send(e.message);
@@ -86,7 +90,11 @@ export class QuestionController {
     try {
       const body : IQuestionRequestBody = req.body;
       const question = await this.questionService.findAndUpdate(body);
-      res.send(question);
+      if (question === null) {
+        res.status(404).send("Question does not exist");
+      } else {
+        res.send(question);
+      }
     } catch (e) {
       if (e instanceof Error) {
         res.status(500).send(e.message);
@@ -98,7 +106,11 @@ export class QuestionController {
     try {
       const questionId : string = req.params.id;
       const question = await this.questionService.findAndDelete(questionId);
-      res.send(question);
+      if (question === null) {
+        res.status(404).send("Question does not exist");
+      } else {
+        res.send(question);
+      }
     } catch (e) {
       if (e instanceof Error) {
         res.status(500).send(e.message);
