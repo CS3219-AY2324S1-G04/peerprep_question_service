@@ -2,9 +2,9 @@ import { IQuestion, IQuestionRequestBody } from "../interface/question.interface
 import { Question } from "../models/question.model";
 
 export class QuestionService {
-    
+
     public findAll(): Promise<IQuestion[]> {
-        return Question.find({}).exec();
+        return Question.find({}).select(['-description']).exec();
     }
 
     public findOneById(questionId: string) : Promise<IQuestion | null> {
