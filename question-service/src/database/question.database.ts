@@ -2,6 +2,7 @@ import { IQuestion, IQuestionRequestBody } from "../interface/question.interface
 import { Question } from "../models/question.model";
 
 export class QuestionService {
+    
     public findAll(): Promise<IQuestion[]> {
         return Question.find({}).exec();
     }
@@ -14,7 +15,6 @@ export class QuestionService {
         return Question.find({ complexity: complexity }).exec();
     }
 
-    
     public findAndUpdate(body : IQuestionRequestBody) : Promise<IQuestion | null> {
         console.log(body);
         const id = body._id;
@@ -27,7 +27,6 @@ export class QuestionService {
                 
             }).exec();
     }
-    
     
     public addQuestion(body : IQuestion) : Promise<IQuestion | null> {
         return Question.create({

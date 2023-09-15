@@ -36,7 +36,7 @@ class App {
 
   private setMongoConfig() {
     mongoose.Promise = global.Promise;
-    mongoose.connect(`mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@127.0.0.1:27017/questions?authSource=admin`).
+    mongoose.connect(`mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@mongo:27017/questions?authSource=admin`).
     catch(error => console.log(error));;
   }
 }

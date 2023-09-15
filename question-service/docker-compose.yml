@@ -1,6 +1,19 @@
 version: '3.8'
 
 services:
+  # REST API - Question Service
+  api:
+    container_name: question-service-api
+    image: question-service-api
+    restart: always
+    env_file:
+      - .env
+    build: .
+    ports:
+      # local->container
+      - 9001:9001
+    links: 
+      - mongo
   # Database - Mongo DB
   mongo:
     image: mongo:latest

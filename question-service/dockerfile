@@ -1,9 +1,17 @@
-FROM node:18
+FROM node:latest
+
+RUN mkdir -p /usr/src/app
 
 WORKDIR /usr/src/app
 
-COPY package.json yarn.lock ./
+COPY package*.json yarn*.lock /usr/src/app/
 
-RUN yarn install --pure-lockfile
+RUN yarn install
 
-CMD [ "yarn start"]
+COPY . .
+
+EXPOSE 9001
+
+EXPOSE 27017
+
+CMD [ "yarn", "start"]
