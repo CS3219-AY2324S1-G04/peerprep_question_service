@@ -1,4 +1,4 @@
-import { IQuestion, IQuestionRequestBody } from "../interface/question.interface";
+import { IQuestion } from "../interface/question.interface";
 import { Question } from "../models/question.model";
 
 export class QuestionService {
@@ -15,7 +15,7 @@ export class QuestionService {
         return Question.find({ complexity: complexity }).exec();
     }
 
-    public findAndUpdate(body : IQuestionRequestBody) : Promise<IQuestion | null> {
+    public findAndUpdate(body : IQuestion) : Promise<IQuestion | null> {
         console.log(body);
         const id = body._id;
         return Question.findByIdAndUpdate(id, 

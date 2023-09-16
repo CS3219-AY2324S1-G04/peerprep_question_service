@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { QuestionService } from "../database/question.database";
-import { IQuestion, IQuestionRequestBody } from "../interface/question.interface";
+import { IQuestion } from "../interface/question.interface";
 
 export class QuestionController {
   public router= Router();
@@ -34,7 +34,7 @@ export class QuestionController {
   private findAll = async (req: Request, res: Response) => {
     try {
       const question = await this.questionService.findAll();
-      res.send(question);
+      res.status(200).send(question);
     } catch (e) {
       if (e instanceof Error) {
         res.status(500).send(e.message);
@@ -49,7 +49,7 @@ export class QuestionController {
       if (question === null) {
         res.status(404).send("Question does not exist");
       } else {
-        res.send(question);
+        res.status(200).send(question);
       }
     } catch (e) {
       if (e instanceof Error) {
@@ -65,7 +65,7 @@ export class QuestionController {
       if (question === null) {
         res.status(404).send("No questions exist");
       } else {
-        res.send(question);
+        res.status(200).send(question);
       }
     } catch (e) {
       if (e instanceof Error) {
@@ -78,7 +78,7 @@ export class QuestionController {
     try {
       const body : IQuestion = req.body;
       const question = await this.questionService.addQuestion(body);
-      res.send(question);
+      res.status(201).send(question);
     } catch (e) {
       if (e instanceof Error) {
         res.status(500).send(e.message);
@@ -88,12 +88,12 @@ export class QuestionController {
 
   private updateQuestion = async (req: Request, res: Response) => {
     try {
-      const body : IQuestionRequestBody = req.body;
+      const body : IQuestion = req.body;
       const question = await this.questionService.findAndUpdate(body);
       if (question === null) {
         res.status(404).send("Question does not exist");
       } else {
-        res.send(question);
+        res.status(201).send(question);
       }
     } catch (e) {
       if (e instanceof Error) {
@@ -109,7 +109,7 @@ export class QuestionController {
       if (question === null) {
         res.status(404).send("Question does not exist");
       } else {
-        res.send(question);
+        res.status(200).send(question);
       }
     } catch (e) {
       if (e instanceof Error) {
