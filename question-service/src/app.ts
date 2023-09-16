@@ -35,8 +35,9 @@ class App {
   }
 
   private setMongoConfig() {
+    const mongo_uri = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_DOCKER_PORT}/questions?authSource=admin`
     mongoose.Promise = global.Promise;
-    mongoose.connect(`mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@mongo:27017/questions?authSource=admin`).
+    mongoose.connect(mongo_uri).
     catch(error => console.log(error));;
   }
 }
