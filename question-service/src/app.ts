@@ -32,6 +32,10 @@ class App {
 
     // Telling express to use our Controller's routes
     this.app.use("/question", questionController.router);
+
+    this.app.use((req, res, next) => {
+      res.send({status:404,title:"Not Found",msg:"Route not found"});
+    })
   }
 
   private setMongoConfig() {
