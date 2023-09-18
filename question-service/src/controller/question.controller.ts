@@ -77,7 +77,7 @@ export class QuestionController {
   private addQuestion = async (req: Request, res: Response) => {
     try {
       const body : IQuestion = req.body;
-      const question = await this.questionService.addQuestion(body);
+      await this.questionService.addQuestion(body);
       res.status(201).send('Question successfully Added');
     } catch (e) {
       if (e instanceof Error) {
