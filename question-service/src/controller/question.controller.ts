@@ -47,7 +47,7 @@ export class QuestionController {
       const id : string = req.params.id;
       const question = await this.questionService.findOneById(id);
       if (question === null) {
-        res.status(404).send("Question does not exist");
+        res.status(404).send('Question does not exist');
       } else {
         res.status(200).send(question);
       }
@@ -63,7 +63,7 @@ export class QuestionController {
       const complexity : string = req.params.complexity;
       const question = await this.questionService.findByComplexity(complexity);
       if (question === null) {
-        res.status(404).send("No questions exist");
+        res.status(404).send('No questions exist');
       } else {
         res.status(200).send(question);
       }
@@ -78,7 +78,7 @@ export class QuestionController {
     try {
       const body : IQuestion = req.body;
       const question = await this.questionService.addQuestion(body);
-      res.status(201).send(question);
+      res.status(201).send('Question successfully Added');
     } catch (e) {
       if (e instanceof Error) {
         res.status(500).send(e.message);
@@ -91,7 +91,7 @@ export class QuestionController {
       const body : IQuestion = req.body;
       const question = await this.questionService.findAndUpdate(body);
       if (question === null) {
-        res.status(404).send("Question does not exist");
+        res.status(404).send('Question does not exist');
       } else {
         res.status(201).send(question);
       }
@@ -107,7 +107,7 @@ export class QuestionController {
       const questionId : string = req.params.id;
       const question = await this.questionService.findAndDelete(questionId);
       if (question === null) {
-        res.status(404).send("Question does not exist");
+        res.status(404).send('Question does not exist');
       } else {
         res.status(200).send(question);
       }
