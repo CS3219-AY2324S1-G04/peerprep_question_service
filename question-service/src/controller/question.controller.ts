@@ -1,8 +1,10 @@
 import { Request, Response, Router } from "express";
 import { QuestionService } from "../database/question.database";
 import { IQuestion } from "../interface/question.interface";
+import { getStandardResponse, getErrorResponse } from "../constants/question-service-api.constants";
 
 export class QuestionController {
+
   public router= Router();
   
   constructor(private questionService: QuestionService) {
@@ -34,10 +36,10 @@ export class QuestionController {
   private findAll = async (req: Request, res: Response) => {
     try {
       const question = await this.questionService.findAll();
-      res.status(200).send(question);
+      res.status(200).send(getStandardResponse('success', question, null));
     } catch (e) {
       if (e instanceof Error) {
-        res.status(500).send(e.message);
+        res.send(getErrorResponse(500, e.message));
       }
     }
   };
@@ -47,13 +49,13 @@ export class QuestionController {
       const id : string = req.params.id;
       const question = await this.questionService.findOneById(id);
       if (question === null) {
-        res.status(404).send('Question does not exist');
+        res.send(getErrorResponse(404, 'Question does not exist'));
       } else {
-        res.status(200).send(question);
+        res.status(200).send(getStandardResponse('success', question, null));
       }
     } catch (e) {
       if (e instanceof Error) {
-        res.status(500).send(e.message);
+        res.send(getErrorResponse(500, e.message));
       }
     }
   }
@@ -62,14 +64,10 @@ export class QuestionController {
     try {
       const complexity : string = req.params.complexity;
       const question = await this.questionService.findByComplexity(complexity);
-      if (question === null) {
-        res.status(404).send('No questions exist');
-      } else {
-        res.status(200).send(question);
-      }
+      res.status(200).send(getStandardResponse('success', question, null));
     } catch (e) {
       if (e instanceof Error) {
-        res.status(500).send(e.message);
+        res.send(getErrorResponse(500, e.message));
       }
     }
   }
@@ -77,11 +75,11 @@ export class QuestionController {
   private addQuestion = async (req: Request, res: Response) => {
     try {
       const body : IQuestion = req.body;
-      await this.questionService.addQuestion(body);
-      res.status(201).send('Question successfully Added');
+      const question = await this.questionService.addQuestion(body);
+      res.status(201).send(question);
     } catch (e) {
       if (e instanceof Error) {
-        res.status(500).send(e.message);
+        res.send(getErrorResponse(500, e.message));
       }
     }
   }
@@ -91,13 +89,13 @@ export class QuestionController {
       const body : IQuestion = req.body;
       const question = await this.questionService.findAndUpdate(body);
       if (question === null) {
-        res.status(404).send('Question does not exist');
+        res.send(getErrorResponse(404, 'Question not found'));
       } else {
-        res.status(201).send(question);
+        res.status(201).send(getStandardResponse('success', question, null));
       }
     } catch (e) {
       if (e instanceof Error) {
-        res.status(500).send(e.message);
+        res.send(getErrorResponse(500, e.message));
       }
     }
   }
@@ -107,15 +105,16 @@ export class QuestionController {
       const questionId : string = req.params.id;
       const question = await this.questionService.findAndDelete(questionId);
       if (question === null) {
-        res.status(404).send('Question does not exist');
+        res.send(getErrorResponse(404, 'Question does not exist'));
       } else {
-        res.status(200).send(question);
+        res.status(200).send(getStandardResponse('success', question, null));
       }
     } catch (e) {
       if (e instanceof Error) {
-        res.status(500).send(e.message);
+        res.send(getErrorResponse(500, e.message));
       }
     }
   }
+
   
 }

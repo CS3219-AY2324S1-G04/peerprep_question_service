@@ -24,8 +24,8 @@ export class QuestionService {
                 description : body.description,
                 categories : body.categories,
                 complexity : body.complexity
-                
-            }).exec();
+            },
+            {new: true}).exec();
     }
     
     public addQuestion(body : IQuestion) : Promise<IQuestion | null> {
