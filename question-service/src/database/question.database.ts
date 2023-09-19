@@ -1,5 +1,5 @@
 import { IQuestion } from '../interface/question.interface';
-import { question } from '../models/questionSchema';
+import { question } from '../models/question.model';
 
 export class QuestionService {
   public findAll(): Promise<IQuestion[]> {
