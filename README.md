@@ -1,1 +1,1 @@
-# cs3219-assignment-2b
+# PeerPrep Question Service
