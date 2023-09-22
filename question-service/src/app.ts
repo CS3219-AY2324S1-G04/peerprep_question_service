@@ -1,3 +1,7 @@
+/**
+ * @file Manages the configuration settings for REST API.
+ * @author Irving de Boer
+ */
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
@@ -5,7 +9,10 @@ import { Application } from 'express';
 import express from 'express';
 import mongoose from 'mongoose';
 
-import { getErrorResponse } from './constants/question-service-api.constants';
+import {
+  getErrorResponse,
+  getStandardResponse,
+} from './constants/question-service-api.constants';
 import { QuestionController } from './controller/question.controller';
 import { QuestionService } from './database/question.database';
 
@@ -31,6 +38,16 @@ class App {
     // Creating a new instance of Question Controller
     const questionService = new QuestionService();
     const questionController = new QuestionController(questionService);
+
+    this.app.use('/', (req, res) => {
+      res.send(
+        getStandardResponse(
+          'success',
+          null,
+          'Welcome to PeerPrep Question Service API!',
+        ),
+      );
+    });
 
     // Telling express to use our Controller's routes
     this.app.use('/question', questionController.router);

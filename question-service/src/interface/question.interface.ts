@@ -1,3 +1,7 @@
+/**
+ * @file Defines type interfaces used within question service API.
+ * @author Irving de Boer
+ */
 import { Document } from 'mongoose';
 
 export interface IQuestion extends Document {

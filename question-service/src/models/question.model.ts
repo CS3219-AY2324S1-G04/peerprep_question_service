@@ -1,3 +1,7 @@
+/**
+ * @file Defines the Database Schema for the question service.
+ * @author Irving de Boer
+ */
 import { Schema, model } from 'mongoose';
 
 import { IQuestion } from '../interface/question.interface';

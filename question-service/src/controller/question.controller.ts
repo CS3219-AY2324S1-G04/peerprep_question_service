@@ -1,3 +1,7 @@
+/**
+ * @file Defines the API endpoints for the question service.
+ * @author Irving de Boer
+ */
 import { Request, Response, Router } from 'express';
 
 import {
@@ -14,6 +18,9 @@ export class QuestionController {
     this.setRoutes();
   }
 
+  /**
+   * Sets the API routes for question service API.
+   */
   public setRoutes() {
     // returns all questions
     this.router.route('/').get(this._findAll);
