@@ -34,15 +34,17 @@ export class QuestionService {
 
   /**
    * Updates a specific question from database based on _id.
+   * @param questionId - The ID of the question being updated..
    * @param body - The JSON object representing the HTTP request body.
    * @returns - A promise to the updated queried document.
    */
-  public findAndUpdate(body: IQuestion): Promise<IQuestion | null> {
-    console.log(body);
-    const id = body._id;
+  public findAndUpdate(
+    questionId: string,
+    body: IQuestion,
+  ): Promise<IQuestion | null> {
     return question
       .findByIdAndUpdate(
-        id,
+        questionId,
         {
           title: body.title,
           description: body.description,

@@ -23,22 +23,22 @@ export class QuestionController {
    */
   public setRoutes() {
     // returns all questions
-    this.router.route('/').get(this._findAll);
+    this.router.route('/questions').get(this._findAll);
 
     // returns all questions of a specified difficulty
-    this.router.route('/complexity/:complexity').get(this._findByComplexity);
+    this.router.route('/questions/matching/').get(this._findByParams);
 
     // returns a specific question by id;
-    this.router.route('/id/:id').get(this._findOneById);
-
-    // adds a question to the question repository
-    this.router.route('/').post(this._addQuestion);
+    this.router.route('/questions/:id').get(this._findOneById);
 
     // updates a question to the question repository
-    this.router.route('/').put(this._updateQuestion);
+    this.router.route('/questions/:id').put(this._updateQuestion);
+
+    // adds a question to the question repository
+    this.router.route('/questions').post(this._addQuestion);
 
     // deletes a question to
-    this.router.route('/:id').delete(this._findAndDelete);
+    this.router.route('/questions/:id').delete(this._findAndDelete);
   }
 
   private _findAll = async (req: Request, res: Response) => {
@@ -68,9 +68,9 @@ export class QuestionController {
     }
   };
 
-  private _findByComplexity = async (req: Request, res: Response) => {
+  private _findByParams = async (req: Request, res: Response) => {
     try {
-      const complexity: string = req.params.complexity;
+      const complexity: string | null = req.query.complexity as string;
       const question = await this._questionService.findByComplexity(complexity);
       res.status(200).send(getStandardResponse('success', question, null));
     } catch (e) {
@@ -84,7 +84,15 @@ export class QuestionController {
     try {
       const body: IQuestion = req.body;
       const question = await this._questionService.addQuestion(body);
-      res.status(201).send(question);
+      res
+        .status(201)
+        .send(
+          getStandardResponse(
+            'success',
+            question,
+            'Question successfully added',
+          ),
+        );
     } catch (e) {
       if (e instanceof Error) {
         res.send(getErrorResponse(500, e.message));
@@ -94,12 +102,24 @@ export class QuestionController {
 
   private _updateQuestion = async (req: Request, res: Response) => {
     try {
+      const questionId: string = req.params.id;
       const body: IQuestion = req.body;
-      const question = await this._questionService.findAndUpdate(body);
+      const question = await this._questionService.findAndUpdate(
+        questionId,
+        body,
+      );
       if (question === null) {
         res.send(getErrorResponse(404, 'Question not found'));
       } else {
-        res.status(201).send(getStandardResponse('success', question, null));
+        res
+          .status(201)
+          .send(
+            getStandardResponse(
+              'success',
+              question,
+              'Question updated successfully',
+            ),
+          );
       }
     } catch (e) {
       if (e instanceof Error) {
@@ -108,14 +128,25 @@ export class QuestionController {
     }
   };
 
-  private _findAndDelete = async (req: Request, res: Response) => {
+  private _findAndDelete = async (
+    req: Request<{ id: string }>,
+    res: Response,
+  ) => {
     try {
       const questionId: string = req.params.id;
       const question = await this._questionService.findAndDelete(questionId);
       if (question === null) {
         res.send(getErrorResponse(404, 'Question does not exist'));
       } else {
-        res.status(200).send(getStandardResponse('success', question, null));
+        res
+          .status(200)
+          .send(
+            getStandardResponse(
+              'success',
+              question,
+              'Question deleted successfully',
+            ),
+          );
       }
     } catch (e) {
       if (e instanceof Error) {

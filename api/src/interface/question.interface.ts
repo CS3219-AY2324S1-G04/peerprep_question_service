@@ -12,3 +12,8 @@ export interface IQuestion extends Document {
   categories: Array<string>;
   complexity: string;
 }
+
+export interface IAuthenticateUser {
+  userId: string;
+  role: string;
+}

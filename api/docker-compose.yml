@@ -3,8 +3,8 @@ version: '3.8'
 services:
   # REST API - Question Service
   api:
-    container_name: question-service-api
-    image: question-service-api
+    container_name: api
+    image: api
     restart: always
     env_file:
       - .env

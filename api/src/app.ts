@@ -9,10 +9,7 @@ import { Application } from 'express';
 import express from 'express';
 import mongoose from 'mongoose';
 
-import {
-  getErrorResponse,
-  getStandardResponse,
-} from './constants/question-service-api.constants';
+import { getErrorResponse } from './constants/question-service-api.constants';
 import { QuestionController } from './controller/question.controller';
 import { QuestionService } from './database/question.database';
 
@@ -39,18 +36,8 @@ class App {
     const questionService = new QuestionService();
     const questionController = new QuestionController(questionService);
 
-    this.app.use('/', (req, res) => {
-      res.send(
-        getStandardResponse(
-          'success',
-          null,
-          'Welcome to PeerPrep Question Service API!',
-        ),
-      );
-    });
-
     // Telling express to use our Controller's routes
-    this.app.use('/question', questionController.router);
+    this.app.use('/question-service', questionController.router);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.app.use((req, res, next) => {
