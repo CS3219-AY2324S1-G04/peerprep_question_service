@@ -17,6 +17,7 @@ The `docker-compose.yml` file starts 2 Docker containers.
     - [REST API](#rest-api)
         - [Retrieve all questions](#retrieve-all-questions)
         - [Retrieve a question by ID](#retrieve-question-by-id)
+        - [Retrieve a question by Params](#retrieve-question-by-param)
         - [Update a question by ID](#update-question)
         - [Add a question to database](#add-question)
         - [Delete a question by ID](#delete-question)
@@ -148,6 +149,47 @@ Retrieves a question by its ID.
 
 - `404` - Error
   - Question ID not found in Database.
+
+- `500` - Error
+    - Unexpected error occurred on the server.
+
+### Retrieve Question by Params
+
+> [GET] `/question-service/questions/:id`
+
+Retrieves a random question by matching params.
+
+**Parameters**
+
+- `complexity` - The complexity of the question (Required)
+- `categories[]` - The categories of the question (Optional)
+
+**Response**
+
+- `200` - Success.
+    - Returns question with matching ID as JSON Object with the following fields:
+        - id
+        - title
+        - description
+        - complexity
+        - categories
+    - Example Response Body
+      ```json
+      {
+        "status": "success",
+        "data": {
+          "id": "123",
+          "title": "Example Question",
+          "description": "Placeholder Description",
+          "complexity": "Easy",
+          "categories": ["Arrays"]   
+        },
+        "message": null
+      }
+      ```
+
+- `400` - Error
+    - URL is missing complexity parameter.
 
 - `500` - Error
     - Unexpected error occurred on the server.
