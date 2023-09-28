@@ -155,7 +155,7 @@ Retrieves a question by its ID.
 
 ### Retrieve Question by Params
 
-> [GET] `/question-service/questions/:id`
+> [GET] `/question-service/questions/matching`
 
 Retrieves a random question by matching params.
 
