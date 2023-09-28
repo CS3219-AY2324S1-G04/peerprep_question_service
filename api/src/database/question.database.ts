@@ -2,7 +2,7 @@
  * @file Manages the database queries.
  * @author Irving de Boer
  */
-import { IQuestion } from '../interface/question.interface';
+import { IFilter, IQuestion } from '../interface/question.interface';
 import { question } from '../models/question.model';
 
 export class QuestionService {
@@ -25,11 +25,16 @@ export class QuestionService {
 
   /**
    * Retrieves all questions of a specific complexity type from the database.
-   * @param complexity - The string representation of the complexity queried.
+   * @param filter - Filter parameters consisting of complexity and categories.
    * @returns - A promise to the queried document.
    */
-  public findByComplexity(complexity: string): Promise<IQuestion[] | null> {
-    return question.find({ complexity: complexity }).exec();
+  public findByParams(filter: IFilter): Promise<IQuestion[]> {
+    if (filter.categories != null) {
+      filter.categories.sort();
+    }
+
+    console.log({ ...filter });
+    return question.find({ ...filter }).exec();
   }
 
   /**
@@ -42,6 +47,7 @@ export class QuestionService {
     questionId: string,
     body: IQuestion,
   ): Promise<IQuestion | null> {
+    body.categories.sort();
     return question
       .findByIdAndUpdate(
         questionId,
@@ -62,6 +68,7 @@ export class QuestionService {
    * @returns - Inserted document.
    */
   public addQuestion(body: IQuestion): Promise<IQuestion | null> {
+    body.categories.sort();
     return question.create({
       title: body.title,
       description: body.description,

@@ -9,7 +9,7 @@ import {
   getStandardResponse,
 } from '../constants/question-service-api.constants';
 import { QuestionService } from '../database/question.database';
-import { IQuestion } from '../interface/question.interface';
+import { IFilter, IQuestion } from '../interface/question.interface';
 
 export class QuestionController {
   public router = Router();
@@ -47,7 +47,7 @@ export class QuestionController {
       res.status(200).send(getStandardResponse('success', question, null));
     } catch (e) {
       if (e instanceof Error) {
-        res.send(getErrorResponse(500, e.message));
+        res.status(500).send(getErrorResponse(500, e.message));
       }
     }
   };
@@ -57,13 +57,13 @@ export class QuestionController {
       const id: string = req.params.id;
       const question = await this._questionService.findOneById(id);
       if (question === null) {
-        res.send(getErrorResponse(404, 'Question does not exist'));
+        res.status(404).send(getErrorResponse(404, 'Question does not exist'));
       } else {
         res.status(200).send(getStandardResponse('success', question, null));
       }
     } catch (e) {
       if (e instanceof Error) {
-        res.send(getErrorResponse(500, e.message));
+        res.status(500).send(getErrorResponse(500, e.message));
       }
     }
   };
@@ -71,11 +71,31 @@ export class QuestionController {
   private _findByParams = async (req: Request, res: Response) => {
     try {
       const complexity: string | null = req.query.complexity as string;
-      const question = await this._questionService.findByComplexity(complexity);
+      const categories: Array<string> | null = req.query
+        .categories as Array<string>;
+      console.log(complexity);
+      console.log(categories);
+
+      if (complexity === null) {
+        res.status(401).send(getErrorResponse(401, 'Missing complexity'));
+        return;
+      }
+
+      const filter: IFilter = {
+        complexity: complexity,
+        categories: categories,
+      };
+
+      const questionList = await this._questionService.findByParams(filter);
+
+      const questionListLength = questionList.length;
+      const randomIndex = Math.floor(Math.random() * questionListLength);
+      const question = questionList[randomIndex];
+
       res.status(200).send(getStandardResponse('success', question, null));
     } catch (e) {
       if (e instanceof Error) {
-        res.send(getErrorResponse(500, e.message));
+        res.status(500).send(getErrorResponse(500, e.message));
       }
     }
   };
@@ -109,7 +129,7 @@ export class QuestionController {
         body,
       );
       if (question === null) {
-        res.send(getErrorResponse(404, 'Question not found'));
+        res.status(404).send(getErrorResponse(404, 'Question not found'));
       } else {
         res
           .status(201)
@@ -136,7 +156,7 @@ export class QuestionController {
       const questionId: string = req.params.id;
       const question = await this._questionService.findAndDelete(questionId);
       if (question === null) {
-        res.send(getErrorResponse(404, 'Question does not exist'));
+        res.status(404).send(getErrorResponse(404, 'Question does not exist'));
       } else {
         res
           .status(200)
@@ -150,7 +170,7 @@ export class QuestionController {
       }
     } catch (e) {
       if (e instanceof Error) {
-        res.send(getErrorResponse(500, e.message));
+        res.status(500).send(getErrorResponse(500, e.message));
       }
     }
   };

@@ -13,6 +13,11 @@ export interface IQuestion extends Document {
   complexity: string;
 }
 
+export interface IFilter {
+  categories: Array<string>;
+  complexity: string;
+}
+
 export interface IAuthenticateUser {
   userId: string;
   role: string;
