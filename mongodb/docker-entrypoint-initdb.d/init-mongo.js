@@ -12,7 +12,8 @@ db.createUser({
 db = new Mongo().getDB("questions");
 db.createCollection("questions");
 
-db.questions.insertMany([
+
+const data = [
   {
     title: "Reverse a String",
     description: `Write a function that reverses a string. The input string is given as an array of characters s.
@@ -512,9 +513,6 @@ db.questions.insertMany([
     complexity: "Hard",
   },
   {
-    title: "",
-  },
-  {
     title: "Median of Two Sorted Arrays",
     description: `Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
       The overall run time complexity should be O(log (m+n)).
@@ -574,5 +572,14 @@ db.questions.insertMany([
     categories: ["Strings", "Algorithms"],
     complexity: "Hard",
   },
-  {},
-]);
+]
+
+const dataLength = data.length;
+
+for (var i = 0; i < dataLength; i++) {
+  let currData = data[i];
+  currData.categories.sort();
+}
+
+
+db.questions.insertMany(data);
