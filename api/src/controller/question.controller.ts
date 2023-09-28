@@ -77,7 +77,9 @@ export class QuestionController {
       console.log(categories);
 
       if (complexity === null) {
-        res.status(401).send(getErrorResponse(401, 'Missing complexity'));
+        res
+          .status(400)
+          .send(getErrorResponse(400, 'Missing complexity parameter'));
         return;
       }
 
