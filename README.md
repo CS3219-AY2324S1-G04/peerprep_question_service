@@ -17,7 +17,7 @@ The `docker-compose.yml` file starts 2 Docker containers.
     - [REST API](#rest-api)
         - [Retrieve all questions](#retrieve-all-questions)
         - [Retrieve a question by ID](#retrieve-question-by-id)
-        - [Retrieve a question by Params](#retrieve-question-by-param)
+        - [Retrieve a question by Params](#retrieve-question-by-params)
         - [Update a question by ID](#update-question)
         - [Add a question to database](#add-question)
         - [Delete a question by ID](#delete-question)
@@ -295,12 +295,5 @@ Deletes a question in the database by ID.
 
 - Only users of the **maintainer** and **admin** role should have authorisation to add, update or delete questions.
 - Unauthorised users will receive a `403` status when calling these endpoints
-
-
-### Adding Endpoint for retrieval of Question for Matching Service 
-
-- An endpoint for the retrieval of a random question when called by the matching service
-- The question should be able to be filtered by both complexity and category
-
-
+- Implement gRPC to for communication with other microservices
 
