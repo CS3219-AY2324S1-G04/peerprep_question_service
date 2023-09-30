@@ -207,6 +207,10 @@ The data for the new question is passed in the request body with the following f
 - `complexity` - The difficulty level of the question
 - `categories` - The different topics applicable to the question
 
+**Cookies**
+
+- `session_token` - Session Token
+
 **Response**
 
 - `201` - Success.
@@ -226,6 +230,9 @@ The data for the new question is passed in the request body with the following f
         "message": "Question updated successfully"
       }
       ```
+      
+- `403` - Error 
+  - The user does not have authorization to update questions in the database.
 - `404` - Error
   - The question could not be found in the database.
 - `500` - Error
@@ -242,6 +249,10 @@ The data for the new question is passed in the request body with the following f
 - `description` - The question description
 - `complexity` - The difficulty level of the question
 - `categories` - The different topics applicable to the question
+
+**Cookies**
+
+- `session_token` - Session Token
 
 **Response**
 
@@ -262,7 +273,8 @@ The data for the new question is passed in the request body with the following f
         "message": "Question added successfully"
       }
       ```
-
+- `403` - Error
+    - The user does not have authorization to add questions to the database.
 - `500` - Error
     - Unexpected error occurred on the server.
 
@@ -271,6 +283,10 @@ The data for the new question is passed in the request body with the following f
 > [DELETE] `/question-service/questions/:id`
 
 Deletes a question in the database by ID.
+
+**Cookies**
+
+- `session_token` - Session Token
 
 **Response**
 
@@ -284,6 +300,8 @@ Deletes a question in the database by ID.
         "message": "Question deleted successfully"
       }
       ```
+- `403` - Error
+    - The user does not have authorization to delete questions from the database.
 - `404` - Error
     - The question could not be found in the database.
 - `500` - Error
