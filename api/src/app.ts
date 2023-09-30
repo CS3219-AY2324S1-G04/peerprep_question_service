@@ -13,6 +13,8 @@ import { getErrorResponse } from './constants/question-service-api.constants';
 import { QuestionController } from './controller/question.controller';
 import { QuestionService } from './database/question.database';
 
+import cookieParser from 'cookie-parser';
+
 dotenv.config();
 
 class App {
@@ -29,6 +31,7 @@ class App {
     this.app.use(bodyParser.json({ limit: '50mb' }));
     this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
     this.app.use(cors());
+    this.app.use(cookieParser());
   }
 
   private _setControllers() {

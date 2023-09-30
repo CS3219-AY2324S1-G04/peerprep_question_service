@@ -11,6 +11,7 @@ import {
 import { QuestionService } from '../database/question.database';
 import { IFilter, IQuestion } from '../interface/question.interface';
 
+
 export class QuestionController {
   public router = Router();
 
@@ -105,6 +106,15 @@ export class QuestionController {
   private _addQuestion = async (req: Request, res: Response) => {
     try {
       const body: IQuestion = req.body;
+      const sessionToken: string = req.cookies['session_token'];
+
+      const isAuthorized = await this._checkUserRole(sessionToken);
+
+      if (!isAuthorized) {
+        res.status(401).send(getErrorResponse(401, 'Unauthorised user. Only admins may perform this role.'));
+        return;
+      }
+
       const question = await this._questionService.addQuestion(body);
       res
         .status(201)
@@ -126,6 +136,16 @@ export class QuestionController {
     try {
       const questionId: string = req.params.id;
       const body: IQuestion = req.body;
+
+      const sessionToken: string = req.cookies['session_token'];
+
+      const isAuthorized = await this._checkUserRole(sessionToken);
+
+      if (!isAuthorized) {
+        res.status(401).send(getErrorResponse(401, 'Unauthorised user Only admins may perform this role.'));
+        return;
+      }
+
       const question = await this._questionService.findAndUpdate(
         questionId,
         body,
@@ -156,6 +176,15 @@ export class QuestionController {
   ) => {
     try {
       const questionId: string = req.params.id;
+      const sessionToken: string = req.cookies['session_token'];
+
+      const isAuthorized = await this._checkUserRole(sessionToken);
+
+      if (!isAuthorized) {
+        res.status(401).send(getErrorResponse(401, 'Unauthorised. Only admins may perform this role.'));
+        return;
+      }
+
       const question = await this._questionService.findAndDelete(questionId);
       if (question === null) {
         res.status(404).send(getErrorResponse(404, 'Question does not exist'));
@@ -176,4 +205,29 @@ export class QuestionController {
       }
     }
   };
+
+  private async _checkUserRole(sessionToken : string): Promise<boolean> {
+    try {
+
+      if (sessionToken === null) {
+        return false;
+      }
+
+      const response = await fetch(`https://localhost:3000?session_token=${sessionToken}`);
+
+      if (response.status != 200) {
+        // Return false if the response status code is not 200
+        return false;
+      }
+
+      const data = await response.json();
+
+      // Check if the response body contains { "role": "admin" }
+      return data && data.role === 'admin';
+    } catch (error) {
+      // Handle any errors that occur during the fetch request
+      console.error('An error occurred:', error);
+      return false;
+    }
+  }
 }
