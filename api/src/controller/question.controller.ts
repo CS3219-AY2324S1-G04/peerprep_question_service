@@ -107,7 +107,7 @@ export class QuestionController {
     try {
       const body: IQuestion = req.body;
       const sessionToken: string = req.cookies['session_token'];
-
+      console.log(sessionToken);
       const isAuthorized = await this._checkUserRole(sessionToken);
 
       if (!isAuthorized) {
@@ -208,22 +208,22 @@ export class QuestionController {
 
   private async _checkUserRole(sessionToken : string): Promise<boolean> {
     try {
-
+      console.log("Method called");
       if (sessionToken === null) {
         return false;
       }
 
-      const response = await fetch(`https://localhost:3000?session_token=${sessionToken}`);
-
+      const response = await fetch(`http://172.100.0.3:3000/user_service/user/identity?session_token=${sessionToken}`);
       if (response.status != 200) {
+        console.log("Response not successful");
         // Return false if the response status code is not 200
         return false;
       }
 
       const data = await response.json();
-
-      // Check if the response body contains { "role": "admin" }
-      return data && data.role === 'admin';
+      console.log(data);
+      // Check if the response body contains { "userRole": "user" }
+      return data && data.userRole === 'user';
     } catch (error) {
       // Handle any errors that occur during the fetch request
       console.error('An error occurred:', error);
