@@ -12,8 +12,11 @@ services:
     ports:
       # local->container
       - ${EXPRESS_LOCAL_PORT}:${EXPRESS_DOCKER_PORT}
-    depends_on: 
+    depends_on:
       - mongo
+    networks:
+      - peerprep_user_service_network1
+
   # Database - Mongo DB
   mongo:
     image: mongo:latest
@@ -29,3 +32,9 @@ services:
     volumes:
       - ../mongodb/docker-entrypoint-initdb.d/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ../mongodb/data:/data/db
+    networks:
+      - peerprep_user_service_network1
+
+networks:
+  peerprep_user_service_network1:
+    external: true
