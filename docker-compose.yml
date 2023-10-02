@@ -3,12 +3,11 @@ version: '3.8'
 services:
   # REST API - Question Service
   api:
-    container_name: api
-    image: api
+    image: peerprep_question_service_api
+    build: ./api
     restart: always
     env_file:
       - .env
-    build: .
     ports:
       # local->container
       - ${EXPRESS_LOCAL_PORT}:${EXPRESS_DOCKER_PORT}
@@ -19,8 +18,8 @@ services:
 
   # Database - Mongo DB
   mongo:
+    container_name: peerprep_question_service_db
     image: mongo:latest
-    container_name: mongo-db
     restart: unless-stopped
     env_file:
       - .env
@@ -30,8 +29,8 @@ services:
     ports:
       - ${MONGODB_LOCAL_PORT}:${MONGODB_DOCKER_PORT}
     volumes:
-      - ../mongodb/docker-entrypoint-initdb.d/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ../mongodb/data:/data/db
+      - ./mongodb/docker-entrypoint-initdb.d/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./mongodb/data:/data/db
     networks:
       - peerprep_user_service_network1
 
