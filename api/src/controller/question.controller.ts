@@ -10,7 +10,9 @@ import {
 } from '../constants/question-service-api.constants';
 import { QuestionService } from '../database/question.database';
 import { IFilter, IQuestion } from '../interface/question.interface';
+import * as dotenv from 'dotenv';
 
+dotenv.config();
 
 export class QuestionController {
   public router = Router();
@@ -210,7 +212,7 @@ export class QuestionController {
         return false;
       }
 
-      const response = await fetch(`http://172.100.0.3:3000/user_service/user/identity?session_token=${sessionToken}`);
+      const response = await fetch(`http://${process.env.USER_SERVICE_HOST}/user_service/user/identity?session_token=${sessionToken}`);
 
       if (response.status != 200) {
         // Return false if the response status code is not 200
