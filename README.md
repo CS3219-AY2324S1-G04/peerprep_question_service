@@ -39,7 +39,6 @@ These environment variables are used by both the API and database images.
 * `MONGODB_PASSWORD` - Password of the database.
 * `MONGODB_USER` - User on the database host.
 * `MONGODB_HOST` - Name of the database.
-* `HASH_COST` - Cost factor of the password hashing algorithm.
 
 ### Database
 
@@ -50,6 +49,7 @@ These environment variables are used by both the API and database images.
 
 * `EXPRESS_DOCKER_PORT` - Docker Port for REST API.
 * `EXPRESS_LOCAL_PORT` - Local Port for REST API.
+* `USER_SERVICE_HOST` - Hostname of User Service.
 
 ## REST API
 
