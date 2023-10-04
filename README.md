@@ -27,7 +27,7 @@ The `docker-compose.yml` file starts 2 Docker containers.
 
 1. Clone the repository.
 2. Create `.env` file with specified variables. Refer to [Environment Variables](#environment-variables) for a list of configs.
-3. Run `npm install` to install necessary dependencies.
+3. Change directory to `api` directory and run `npm install` to install necessary dependencies.
 4. Create and start Docker containers by running command `docker compose up -d`.
 
 ## Environment Variables
