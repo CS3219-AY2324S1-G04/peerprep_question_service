@@ -29,7 +29,7 @@ export class QuestionController {
     this.router.route('/questions').get(this._findAll);
 
     // returns all questions of a specified difficulty
-    this.router.route('/questions/matching/').get(this._findByParams);
+    this.router.route('/question-matching/question').get(this._findByParams);
 
     // returns a specific question by id;
     this.router.route('/questions/:id').get(this._findOneById);
@@ -220,8 +220,8 @@ export class QuestionController {
       }
 
       const data = await response.json();
-      // Check if the response body contains { "userRole": "user" }
-      return data && data.userRole === 'user';
+      // Check if the response body contains { "userRole": "admin" or "maintainer" }
+      return data && data.userRole === 'admin' || data.userRole === 'maintainer';
     } catch (error) {
       // Handle any errors that occur during the fetch request
       console.error('An error occurred:', error);
