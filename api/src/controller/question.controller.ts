@@ -2,14 +2,11 @@
  * @file Defines the API endpoints for the question service.
  * @author Irving de Boer
  */
-import { Request, Response, Router } from 'express';
+import {Request, Response, Router} from 'express';
 
-import {
-  getErrorResponse,
-  getStandardResponse,
-} from '../constants/question-service-api.constants';
-import { QuestionService } from '../database/question.database';
-import { IFilter, IQuestion } from '../interface/question.interface';
+import {getErrorResponse, getStandardResponse,} from '../constants/question-service-api.constants';
+import {QuestionService} from '../database/question.database';
+import {IFilter, IQuestion} from '../interface/question.interface';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -180,7 +177,7 @@ export class QuestionController {
       const isAuthorized = await this._checkUserRole(sessionToken);
 
       if (!isAuthorized) {
-        res.status(401).send(getErrorResponse(401, 'Unauthorised. Only admins may perform this role.'));
+        res.status(401).send(getErrorResponse(401, 'Unauthorised. Only users with role type of admin or maintainer may perform this role.'));
         return;
       }
 
