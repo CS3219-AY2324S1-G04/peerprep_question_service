@@ -155,7 +155,7 @@ Retrieves a question by its ID.
 
 ### Retrieve Question by Params
 
-> [GET] `/question-service/questions/matching`
+> [GET] `/question-service/question-matching/question`
 
 Retrieves a random question by matching params.
 
@@ -167,7 +167,7 @@ Retrieves a random question by matching params.
 **Response**
 
 - `200` - Success.
-    - Returns question with matching ID as JSON Object with the following fields:
+    - Returns question with matching filters as JSON Object with the following fields:
         - id
         - title
         - description
@@ -215,6 +215,7 @@ The data for the new question is passed in the request body with the following f
 
 - `201` - Success.
     - Question is successfully added to the database.
+      - Only users of user role `admin` or `maintainer` can update questions.
     - The `data` field in the response contains the newly added question.
     - Example Response Body
       ```json
@@ -258,6 +259,7 @@ The data for the new question is passed in the request body with the following f
 
 - `201` - Success.
     - Question is successfully added to the database
+        - Only users of user role `admin` or `maintainer` can add questions.
     - The `data` field in the response contains the newly added question
     - Example Response Body
       ```json
@@ -292,6 +294,8 @@ Deletes a question in the database by ID.
 
 - `201` - Success.
     - Question is successfully deleted from the database.
+      - Only users of user role `admin` or `maintainer` can delete questions.
+      
     - Example Response Body
       ```json
       {
@@ -307,11 +311,4 @@ Deletes a question in the database by ID.
 - `500` - Error
     - Unexpected error occurred on the server.
 
-## Features Under Development
-
-### Implementing User Roles into API Endpoints
-
-- Only users of the **maintainer** and **admin** role should have authorisation to add, update or delete questions.
-- Unauthorised users will receive a `403` status when calling these endpoints
-- Implement gRPC to for communication with other microservices
 
