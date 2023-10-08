@@ -7,8 +7,8 @@
     "start:dev": "nodemon",
     "start": "npm run build && node ./build/server.js",
     "build": "rimraf ./build && tsc",
-    "test": "jest ./tests",
-    "format": "prettier --config .prettierrc --write 'src/**/*.ts' --write 'tests/**/*.ts'",
+    "test": "jest src/tests",
+    "format": "prettier --config .prettierrc --write 'src/**/*.ts' --write 'src/tests/**/*.ts'",
     "lint": "eslint . --ext .ts",
     "fix": "npm run format && eslint . --ext .ts --fix"
   },
@@ -17,13 +17,15 @@
   "license": "ISC",
   "dependencies": {
     "@types/cookie-parser": "^1.4.4",
+    "@types/supertest": "^2.0.14",
     "all": "^0.0.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "mongoose": "^7.5.1"
+    "mongoose": "^7.5.1",
+    "supertest": "^6.3.3"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",

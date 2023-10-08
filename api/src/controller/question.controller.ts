@@ -107,7 +107,7 @@ export class QuestionController {
       const isAuthorized = await this._checkUserRole(sessionToken);
 
       if (!isAuthorized) {
-        res.status(401).send(getErrorResponse(401, 'Unauthorised user. Only admins may perform this role.'));
+        res.status(401).send(getErrorResponse(401, 'Unauthorised user. Only admins and maintainers may perform this role.'));
         return;
       }
 
@@ -138,7 +138,7 @@ export class QuestionController {
       const isAuthorized = await this._checkUserRole(sessionToken);
 
       if (!isAuthorized) {
-        res.status(401).send(getErrorResponse(401, 'Unauthorised user Only admins may perform this role.'));
+        res.status(401).send(getErrorResponse(401, 'Unauthorised user. Only admins and maintainers may perform this role.'));
         return;
       }
 
@@ -218,7 +218,7 @@ export class QuestionController {
 
       const data = await response.json();
       // Check if the response body contains { "userRole": "admin" or "maintainer" }
-      return data && data.userRole === 'admin' || data.userRole === 'maintainer';
+      return data && (data.userRole === 'admin' || data.userRole === 'maintainer');
     } catch (error) {
       // Handle any errors that occur during the fetch request
       console.error('An error occurred:', error);
