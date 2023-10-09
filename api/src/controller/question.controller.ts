@@ -39,6 +39,8 @@ export class QuestionController {
 
     // deletes a question to
     this.router.route('/questions/:id').delete(this._findAndDelete);
+
+    this.router.route('/categories').get(this._getCategories);
   }
 
   private _findAll = async (req: Request, res: Response) => {
@@ -107,7 +109,7 @@ export class QuestionController {
       const isAuthorized = await this._checkUserRole(sessionToken);
 
       if (!isAuthorized) {
-        res.status(401).send(getErrorResponse(401, 'Unauthorised user. Only admins may perform this role.'));
+        res.status(401).send(getErrorResponse(401, 'Unauthorised user. Only admins and maintainers may perform this role.'));
         return;
       }
 
@@ -138,7 +140,7 @@ export class QuestionController {
       const isAuthorized = await this._checkUserRole(sessionToken);
 
       if (!isAuthorized) {
-        res.status(401).send(getErrorResponse(401, 'Unauthorised user Only admins may perform this role.'));
+        res.status(401).send(getErrorResponse(401, 'Unauthorised user. Only admins and maintainers may perform this role.'));
         return;
       }
 
@@ -202,6 +204,18 @@ export class QuestionController {
     }
   };
 
+  private _getCategories = async (req: Request, res: Response)=> {
+    try {
+      console.log("Method called");
+      const categories : Array<string> = await this._questionService.getCategories();
+      res.status(200).send(getStandardResponse('success', categories, null));
+    } catch (e) {
+      if (e instanceof Error) {
+        res.status(500).send(getErrorResponse(500, e.message));
+      }
+    }
+  }
+
   private async _checkUserRole(sessionToken : string): Promise<boolean> {
     try {
       console.log("Method called");
@@ -218,10 +232,9 @@ export class QuestionController {
 
       const data = await response.json();
       // Check if the response body contains { "userRole": "admin" or "maintainer" }
-      return data && data.userRole === 'admin' || data.userRole === 'maintainer';
+      return data && (data.userRole === 'admin' || data.userRole === 'maintainer');
     } catch (error) {
       // Handle any errors that occur during the fetch request
-      console.error('An error occurred:', error);
       return false;
     }
   }

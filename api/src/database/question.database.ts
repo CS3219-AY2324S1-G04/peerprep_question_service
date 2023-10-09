@@ -85,4 +85,11 @@ export class QuestionService {
   public findAndDelete(id: string): Promise<IQuestion | null> {
     return question.findByIdAndDelete(id).exec();
   }
+
+  public async getCategories() : Promise<Array<string>> {
+    const data : Array<string> = await question.distinct('categories').exec();
+
+    //filter duplicates
+    return data.sort();
+  }
 }
