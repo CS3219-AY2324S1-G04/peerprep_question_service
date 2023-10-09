@@ -1,18 +1,9 @@
-import app from "../app"
 import supertest from "supertest";
 import {QuestionService} from "../database/question.database";
-import {mockData} from "./mock.data";
+import newApp from "../app";
+import {mockData} from "./mock_data";
 
-const newApp = app;
-
-
-describe('Questions', () => {
-    describe('GET /', () => {
-        it('Should return error 404 status code and message', async () => {
-           const {statusCode} = await supertest(newApp).get('/');
-           expect(statusCode).toBe(404);
-        });
-    });
+describe('Testing API endpoints for retrieving all questions', () => {
 
     describe('GET /question-service/questions', () => {
         describe('Successful request', () => {
@@ -21,6 +12,7 @@ describe('Questions', () => {
                     // @ts-ignore
                     .mockReturnValueOnce(Promise.resolve(mockData));
                 const {statusCode} = await supertest(newApp).get('/question-service/questions');
+                expect(QuestionService.prototype.findAll).toHaveBeenCalled();
                 expect(statusCode).toBe(200);
             });
         });
@@ -34,7 +26,9 @@ describe('Questions', () => {
                    });
                const {statusCode} = await supertest(newApp).get('/question-service/questions');
                expect(statusCode).toBe(500);
+               expect(QuestionService.prototype.findAll).toHaveBeenCalled();
            });
         });
     });
+
 });
