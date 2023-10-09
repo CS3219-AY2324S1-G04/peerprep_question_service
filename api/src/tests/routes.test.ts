@@ -1,12 +1,13 @@
-import request from "supertest"
+import app from "../app"
+import supertest from "supertest";
 
-const baseUrl = 'https://jsonplaceholder.typicode.com/';
+const newApp = app;
 
-describe('Todos endpoint', () => {
-    it('should return a 200 status code', async () => {
-        const response = await request(baseUrl)
-            .get('todos/1');
-
-        expect(response.statusCode).toBe(200);
+describe('Questions', () => {
+    describe('GET /', () => {
+        it('Should return error 404 message', async () => {
+           const {statusCode} = await supertest(newApp).get('/');
+           expect(statusCode).toBe(404);
+        });
     });
 });
