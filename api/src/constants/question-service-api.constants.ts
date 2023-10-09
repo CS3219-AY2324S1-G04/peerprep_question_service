@@ -19,7 +19,7 @@ export const PORT = process.env.EXPRESS_DOCKER_PORT;
  */
 export const getStandardResponse = function (
   status: string,
-  data: IQuestion | IQuestion[] | null,
+  data: IQuestion | IQuestion[] |Array<String> | null,
   message: string | null,
 ) {
   return {
