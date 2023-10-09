@@ -252,7 +252,7 @@ const data = [
       
       1 <= s.length <= 105
       s[i] is either 'A', 'C', 'G', or 'T'.`,
-    categories: ["Algorithms, Bit Manipulation"],
+    categories: ["Algorithms", "Bit Manipulation"],
     complexity: "Medium",
   },
   {
@@ -478,7 +478,7 @@ const data = [
       -104 <= lists[i][j] <= 104
       lists[i] is sorted in ascending order.
       The sum of lists[i].length will not exceed 104.`,
-    categories: ["Algorithms, Searching", "Sorting"],
+    categories: ["Algorithms", "Searching", "Sorting"],
     complexity: "Hard",
   },
   {

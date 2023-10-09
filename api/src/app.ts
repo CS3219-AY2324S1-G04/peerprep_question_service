@@ -44,7 +44,7 @@ class App {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.app.use((req, res, next) => {
-      res.send(getErrorResponse(404, 'Invalid API Call'));
+      res.status(404).send(getErrorResponse(404, 'Invalid API Call'));
     });
   }
 

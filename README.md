@@ -312,3 +312,37 @@ Deletes a question in the database by ID.
     - Unexpected error occurred on the server.
 
 
+### Get Categories
+
+> [GET] `/question-service/categories`
+
+Retrieves all unique categories in the database.
+
+**Response**
+
+- `200` - Success.
+  - Returns categories as an Array of strings
+  - Example Response Body
+    ```json
+    {
+      "status": "success",
+      "data": [
+        "Algorithms",
+        "Arrays",
+        "Bit Manipulation",
+        "Data Structure",
+        "Data Structures",
+        "Dynamic Programming",
+        "Recursion",
+        "Searching",
+        "Sorting",
+        "Strings"
+      ],
+      "message": null
+    }
+    ```
+- `500` - Error
+    - Unexpected error occurred on the server.
+
+
+
