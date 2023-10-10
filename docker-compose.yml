@@ -3,6 +3,7 @@ version: '3.8'
 services:
   # REST API - Question Service
   api:
+    container_name: question_service_api
     image: peerprep_question_service_api
     build: ./api
     restart: always
@@ -18,7 +19,7 @@ services:
 
   # Database - Mongo DB
   mongo:
-    container_name: peerprep_question_service_db
+    container_name: question_service_db
     image: mongo:latest
     restart: unless-stopped
     env_file:
