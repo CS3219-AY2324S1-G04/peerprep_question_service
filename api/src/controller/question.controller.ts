@@ -72,14 +72,14 @@ export class QuestionController {
 
   private _findByParams = async (req: Request, res: Response) => {
     try {
-      const complexity: string | null = req.query.complexity as string;
-      const categories: Array<string> | null = req.query
+      const complexity: string = req.query.complexity as string;
+      const categories: Array<string>  = req.query
         .categories as Array<string>;
 
-      if (complexity === null) {
+      if (!req.query || !req.query.complexity || complexity === '') {
         res
           .status(400)
-          .send(getErrorResponse(400, 'Missing complexity parameter'));
+          .send(getErrorResponse(400, 'Missing parameters in query'));
         return;
       }
 
