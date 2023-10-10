@@ -163,7 +163,7 @@ export class QuestionController {
       }
     } catch (e) {
       if (e instanceof Error) {
-        res.send(getErrorResponse(500, e.message));
+        res.status(500).send(getErrorResponse(500, e.message));
       }
     }
   };
