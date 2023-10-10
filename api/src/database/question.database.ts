@@ -39,7 +39,7 @@ export class QuestionService {
 
   /**
    * Updates a specific question from database based on _id.
-   * @param questionId - The ID of the question being updated..
+   * @param questionId - The ID of the question being updated.
    * @param body - The JSON object representing the HTTP request body.
    * @returns - A promise to the updated queried document.
    */
