@@ -5,13 +5,12 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import { Application } from 'express';
-import express from 'express';
+import express, {Application} from 'express';
 import mongoose from 'mongoose';
 
-import { getErrorResponse } from './constants/question-service-api.constants';
-import { QuestionController } from './controller/question.controller';
-import { QuestionService } from './database/question.database';
+import {getErrorResponse} from './constants/question-service-api.constants';
+import {QuestionController} from './controller/question.controller';
+import {QuestionService} from './database/question.database';
 
 import cookieParser from 'cookie-parser';
 
@@ -51,9 +50,11 @@ class App {
   private _setMongoConfig() {
     const MONGO_URI = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_DOCKER_PORT}/questions?authSource=admin`;
 
+    if (process.env.NODE_ENV !== 'test') {
     mongoose
       .connect(MONGO_URI, { ignoreUndefined: true })
       .catch((error) => console.log(error));
+    }
   }
 }
 
