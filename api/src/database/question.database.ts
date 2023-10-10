@@ -86,6 +86,10 @@ export class QuestionService {
     return question.findByIdAndDelete(id).exec();
   }
 
+  /**
+   * Retrieves all categories from the database.
+   * @returns - A promise to the queried document.
+   */
   public async getCategories() : Promise<Array<string>> {
     const data : Array<string> = await question.distinct('categories').exec();
 
