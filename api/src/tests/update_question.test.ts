@@ -2,7 +2,7 @@ import supertest from "supertest";
 import {QuestionService} from "../database/question.database";
 import newApp from "../app";
 import {mockData} from "./mock_data";
-import {QuestionController} from "../controller/question.controller";
+import {PutRoute} from "../routes/route.put";
 
 describe('Testing API endpoints for updating a question by ID', () => {
     describe('PUT /question-service/questions/:id', () => {
@@ -17,7 +17,7 @@ describe('Testing API endpoints for updating a question by ID', () => {
             }
             it('Should return status code 200 and the updated question', async () => {
 
-                jest.spyOn(QuestionController.prototype as any, '_checkUserRole')
+                jest.spyOn(PutRoute.prototype as any, '_checkUserRole')
                     // @ts-ignore
                     .mockReturnValueOnce(Promise.resolve(true));
 
@@ -43,7 +43,7 @@ describe('Testing API endpoints for updating a question by ID', () => {
             }
             it('Should return status code 404 and an error message', async () => {
 
-                jest.spyOn(QuestionController.prototype as any, '_checkUserRole')
+                jest.spyOn(PutRoute.prototype as any, '_checkUserRole')
                     // @ts-ignore
                     .mockReturnValueOnce(Promise.resolve(true));
 
@@ -68,7 +68,7 @@ describe('Testing API endpoints for updating a question by ID', () => {
             }
             it('Should return status code 401 and an error message', async () => {
 
-                jest.spyOn(QuestionController.prototype as any, '_checkUserRole')
+                jest.spyOn(PutRoute.prototype as any, '_checkUserRole')
                     // @ts-ignore
                     .mockReturnValueOnce(Promise.resolve(false));
 
@@ -88,7 +88,7 @@ describe('Testing API endpoints for updating a question by ID', () => {
                 complexity: 'Medium'
             }
             it('Should return status code 500 and an error message', async () => {
-                jest.spyOn(QuestionController.prototype as any, '_checkUserRole')
+                jest.spyOn(PutRoute.prototype as any, '_checkUserRole')
                     // @ts-ignore
                     .mockReturnValueOnce(Promise.resolve(true));
 

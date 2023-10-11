@@ -2,7 +2,7 @@ import supertest from "supertest";
 import {QuestionService} from "../database/question.database";
 import newApp from "../app";
 import {mockData} from "./mock_data";
-import {QuestionController} from "../controller/question.controller";
+import {DeleteRoute} from "../routes/route.delete";
 
 describe('Testing API endpoints for deleting a question by ID', () => {
     describe('DELETE /question-service/questions/:id', () => {
@@ -11,7 +11,7 @@ describe('Testing API endpoints for deleting a question by ID', () => {
             const id = mockData[0]._id;
             it('Should return status code 200 and the deleted question', async () => {
 
-                jest.spyOn(QuestionController.prototype as any, '_checkUserRole')
+                jest.spyOn(DeleteRoute.prototype as any, '_checkUserRole')
                     // @ts-ignore
                     .mockReturnValueOnce(Promise.resolve(true));
 
@@ -30,7 +30,7 @@ describe('Testing API endpoints for deleting a question by ID', () => {
             const id = '5f9d7a3b9d1d9e1f1c9b4c9a';
             it('Should return status code 404 and an error message', async () => {
 
-                jest.spyOn(QuestionController.prototype as any, '_checkUserRole')
+                jest.spyOn(DeleteRoute.prototype as any, '_checkUserRole')
                     // @ts-ignore
                     .mockReturnValueOnce(Promise.resolve(true));
 
@@ -48,7 +48,7 @@ describe('Testing API endpoints for deleting a question by ID', () => {
             const id = mockData[0]._id;
             it('Should return status code 401 and an error message', async () => {
 
-                jest.spyOn(QuestionController.prototype as any, '_checkUserRole')
+                jest.spyOn(DeleteRoute.prototype as any, '_checkUserRole')
                     // @ts-ignore
                     .mockReturnValueOnce(Promise.resolve(false));
 
@@ -61,7 +61,7 @@ describe('Testing API endpoints for deleting a question by ID', () => {
         describe('Unsuccessful request, error occurred', () => {
             const id = mockData[0]._id;
             it('Should return status code 500 and an error message', async () => {
-                jest.spyOn(QuestionController.prototype as any, '_checkUserRole')
+                jest.spyOn(DeleteRoute.prototype as any, '_checkUserRole')
                     // @ts-ignore
                     .mockReturnValueOnce(Promise.resolve(true));
 

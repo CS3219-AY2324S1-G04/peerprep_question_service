@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import {QuestionService} from "../database/question.database";
 import newApp from "../app";
-import {QuestionController} from "../controller/question.controller";
+import {PostRoute} from "../routes/route.post";
 
 describe('Testing API endpoints for adding questions', () => {
     describe('POST /question-service/questions', () => {
@@ -14,7 +14,7 @@ describe('Testing API endpoints for adding questions', () => {
                 complexity: 'Easy'
             }
             it('Should return status code 201 and the newly added question', async () => {
-                jest.spyOn(QuestionController.prototype as any, '_checkUserRole')
+                jest.spyOn(PostRoute.prototype as any, '_checkUserRole')
                     // @ts-ignore
                     .mockReturnValueOnce(Promise.resolve(true));
                 jest.spyOn(QuestionService.prototype, 'addQuestion')
@@ -35,7 +35,7 @@ describe('Testing API endpoints for adding questions', () => {
                 complexity: 'Easy'
             }
             it('Should return status code 401 and an error message', async () => {
-                jest.spyOn(QuestionController.prototype as any, '_checkUserRole')
+                jest.spyOn(PostRoute.prototype as any, '_checkUserRole')
                     // @ts-ignore
                     .mockReturnValueOnce(Promise.resolve(false));
                 const {statusCode} = await supertest(newApp).post('/question-service/questions')
@@ -52,12 +52,12 @@ describe('Testing API endpoints for adding questions', () => {
                 complexity: 'Easy'
            }
               it('Should return status code 500 and an error message', async () => {
-                    jest.spyOn(QuestionController.prototype as any, '_checkUserRole')
+                    jest.spyOn(PostRoute.prototype as any, '_checkUserRole')
                         // @ts-ignore
                         .mockReturnValueOnce(Promise.resolve(true));
                     jest.spyOn(QuestionService.prototype, 'addQuestion')
                         // @ts-ignore
-                        .mockImplementation(() => {
+                        .mockImplementationOnce(() => {
                             throw new Error('Error');
                         });
                     const {statusCode} = await supertest(newApp).post('/question-service/questions')
