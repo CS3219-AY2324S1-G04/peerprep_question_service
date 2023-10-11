@@ -1,0 +1,58 @@
+import {Router} from "express";
+import {QuestionService} from "../database/question.database";
+import {IQuestion} from "../interface/question.interface";
+
+
+export abstract class Routes {
+    public router;
+
+    protected constructor(protected _questionService: QuestionService) {
+        this.router = Router();
+    };
+
+    protected abstract _setRoutes(): void;
+
+    protected _getErrorResponse(code: number, message: string) {
+        return {
+            status: 'error',
+            code: code,
+            data: null,
+            message: message,
+        };
+    };
+
+    protected _getStandardResponse = function (
+        status: string,
+        data: IQuestion | IQuestion[] | Array<String> | null,
+        message: string | null,
+    ) {
+        return {
+            status: status,
+            data: data,
+            message: message,
+        };
+    };
+
+    protected async _checkUserRole(sessionToken : string): Promise<boolean> {
+        try {
+            console.log("Method called");
+            if (sessionToken === null) {
+                return false;
+            }
+
+            const response = await fetch(`http://${process.env.USER_SERVICE_HOST}/user-service/user/identity?session_token=${sessionToken}`);
+
+            if (response.status != 200) {
+                // Return false if the response status code is not 200
+                return false;
+            }
+
+            const data = await response.json();
+            // Check if the response body contains { "userRole": "admin" or "maintainer" }
+            return data && (data.userRole === 'admin' || data.userRole === 'maintainer');
+        } catch (error) {
+            // Handle any errors that occur during the fetch request
+            return false;
+        }
+    }
+}

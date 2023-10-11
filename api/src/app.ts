@@ -8,11 +8,13 @@ import * as dotenv from 'dotenv';
 import express, {Application} from 'express';
 import mongoose from 'mongoose';
 
-import {getErrorResponse} from './constants/question-service-api.constants';
-import {QuestionController} from './controller/question.controller';
 import {QuestionService} from './database/question.database';
 
 import cookieParser from 'cookie-parser';
+import {GetRoute} from "./routes/route.get";
+import {PostRoute} from "./routes/route.post";
+import {PutRoute} from "./routes/route.put";
+import {DeleteRoute} from "./routes/route.delete";
 
 dotenv.config();
 
@@ -36,14 +38,24 @@ class App {
   private _setControllers() {
     // Creating a new instance of Question Controller
     const questionService = new QuestionService();
-    const questionController = new QuestionController(questionService);
+    const getRoutes = new GetRoute(questionService);
+    const postRoutes = new PostRoute(questionService);
+    const putRoutes = new PutRoute(questionService);
+    const deleteRoutes = new DeleteRoute(questionService);
 
     // Telling express to use our Controller's routes
-    this.app.use('/question-service', questionController.router);
+    this.app.use('/question-service', getRoutes.router);
+    this.app.use('/question-service', postRoutes.router);
+    this.app.use('/question-service', putRoutes.router);
+    this.app.use('/question-service', deleteRoutes.router);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.app.use((req, res, next) => {
-      res.status(404).send(getErrorResponse(404, 'Invalid API Call'));
+      res.status(404).send({
+        status: 404,
+        data: null,
+        message: 'API endpoint not valid',
+    });
     });
   }
 
