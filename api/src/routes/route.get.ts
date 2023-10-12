@@ -17,7 +17,9 @@ export class GetRoute extends Routes {
 
     private _findAll = async (req: Request, res: Response) => {
         try {
-            const question = await this._questionService.findAll();
+            const limit : number = Number(req.query.limit as string);
+            const offset : number = Number(req.query.offset as string);
+            const question = await this._questionService.findAll(limit, offset);
             res.status(200).send(this._getStandardResponse('success', question, null));
         } catch (e) {
             if (e instanceof Error) {

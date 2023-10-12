@@ -83,6 +83,11 @@ These environment variables are used by both the API and database images.
 
 Retrieves all questions in the database.
 
+**Parameters**
+
+- `limit` - The max number of questions in response (Optional)
+- `offset` - The offset for the first question in response (Optional)
+
 **Response**
 
 - `200` - Success.
