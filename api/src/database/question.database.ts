@@ -10,8 +10,8 @@ export class QuestionService {
    * Retrieves all questions in the database.
    * @returns - A promise to queried document.
    */
-  public findAll(): Promise<IQuestion[]> {
-    return question.find({}).select(['-description']).exec();
+  public findAll(limit: number, offset: number): Promise<IQuestion[]> {
+    return question.find({}, null, {limit: limit, skip: offset}).select(['-description']).exec();
   }
 
   /**
