@@ -15,6 +15,7 @@ import {GetRoute} from "./routes/route.get";
 import {PostRoute} from "./routes/route.post";
 import {PutRoute} from "./routes/route.put";
 import {DeleteRoute} from "./routes/route.delete";
+import {Scheduler} from "./tasks/tasks.schedule";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ class App {
     this._setConfig();
     this._setMongoConfig();
     this._setControllers();
+    this._setScheduler();
   }
 
   private _setConfig() {
@@ -68,6 +70,11 @@ class App {
       .catch((error) => console.log(error));
     }
   }
+
+    private _setScheduler() {
+        const scheduler = new Scheduler();
+        scheduler.start();
+    }
 }
 
 export default new App().app;

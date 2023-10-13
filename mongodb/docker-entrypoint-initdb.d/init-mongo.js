@@ -31,6 +31,8 @@ const data = [
       • s[i] is a printable ascii character.`,
     categories: ["Strings", "Algorithms"],
     complexity: "Easy",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Linked List Cycle Detection",
@@ -61,6 +63,8 @@ const data = [
       Follow up: Can you solve it using O(1) (i.e. constant) memory?`,
     categories: ["Data Structures", "Algorithms"],
     complexity: "Easy",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Two Sum",
@@ -89,6 +93,8 @@ const data = [
       Only one valid answer exists.`,
     categories: ["Algorithms", "Searching"],
     complexity: "Easy",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Roman to Integer",
@@ -137,6 +143,8 @@ const data = [
       It is guaranteed that s is a valid roman numeral in the range [1, 3999].`,
     categories: ["Algorithms"],
     complexity: "Easy",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Add Binary",
@@ -159,6 +167,8 @@ const data = [
       Each string does not contain leading zeros except for the zero itself.`,
     categories: ["Bit Manipulation", "Algorithms"],
     complexity: "Easy",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Fibonacci Number",
@@ -192,6 +202,8 @@ const data = [
       0 <= n <= 30`,
     categories: ["Recursion", "Algorithms"],
     complexity: "Easy",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Implement Stack using Queues",
@@ -226,6 +238,8 @@ const data = [
       myStack.empty(); // return False`,
     categories: ["Data Structures"],
     complexity: "Easy",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Repeated DNA Sequence",
@@ -254,6 +268,8 @@ const data = [
       s[i] is either 'A', 'C', 'G', or 'T'.`,
     categories: ["Algorithms", "Bit Manipulation"],
     complexity: "Medium",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Course Scheudle",
@@ -287,6 +303,8 @@ const data = [
       All the pairs prerequisites[i] are unique.`,
     categories: ["Data Structures", "Algorithms"],
     complexity: "Medium",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "LRU Cache",
@@ -330,6 +348,8 @@ const data = [
       At most 2 * 105 calls will be made to get and put.`,
     categories: ["Data Structures"],
     complexity: "Medium",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Longest Palindromic Substring",
@@ -349,6 +369,8 @@ const data = [
       s consist of only digits and English letters.`,
     categories: ["Algorithms"],
     complexity: "Medium",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Longest Substring Without Repeating Characters",
@@ -375,6 +397,8 @@ const data = [
       s consists of English letters, digits, symbols and spaces.`,
     categories: ["Algorithms", "Dynamic Programming"],
     complexity: "Medium",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Longest Common Subsequence",
@@ -410,6 +434,8 @@ const data = [
       text1 and text2 consist of only lowercase English characters.`,
     categories: ["Strings", "Algorithms"],
     complexity: "Medium",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Sliding Window Maximum",
@@ -445,6 +471,8 @@ const data = [
       1 <= k <= nums.length`,
     categories: ["Arrays", "Algorithms"],
     complexity: "Hard",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Merge k Sorted Lists",
@@ -480,6 +508,8 @@ const data = [
       The sum of lists[i].length will not exceed 104.`,
     categories: ["Algorithms", "Searching", "Sorting"],
     complexity: "Hard",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Regular Expression Matching",
@@ -511,6 +541,8 @@ const data = [
       It is guaranteed for each appearance of the character '*', there will be a previous valid character to match.`,
     categories: ["Algorithms", "Data Structure"],
     complexity: "Hard",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Median of Two Sorted Arrays",
@@ -536,6 +568,8 @@ const data = [
       -106 <= nums1[i], nums2[i] <= 106`,
     categories: ["Algorithms", "Searching"],
     complexity: "Hard",
+    deleted: false,
+    deletedAt: null,
   },
   {
     title: "Wildcard Matching",
@@ -571,6 +605,8 @@ const data = [
       p contains only lowercase English letters, '?' or '*'.`,
     categories: ["Strings", "Algorithms"],
     complexity: "Hard",
+    deleted: false,
+    deletedAt: null,
   },
 ]
 

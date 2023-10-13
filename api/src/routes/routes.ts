@@ -1,3 +1,7 @@
+/**
+ * @file Parent route class and method.
+ * @author Irving de Boer
+ */
 import {Router} from "express";
 import {QuestionService} from "../database/question.database";
 import {IQuestion} from "../interface/question.interface";
@@ -35,12 +39,11 @@ export abstract class Routes {
 
     protected async _checkUserRole(sessionToken : string): Promise<boolean> {
         try {
-            console.log("Method called");
             if (sessionToken === null) {
                 return false;
             }
 
-            const response = await fetch(`http://${process.env.USER_SERVICE_HOST}/user-service/user/identity?session_token=${sessionToken}`);
+            const response = await fetch(`http://${process.env.USER_SERVICE_HOST}/user-service/user/identity?session-token=${sessionToken}`);
 
             if (response.status != 200) {
                 // Return false if the response status code is not 200
@@ -48,6 +51,7 @@ export abstract class Routes {
             }
 
             const data = await response.json();
+
             // Check if the response body contains { "userRole": "admin" or "maintainer" }
             return data && (data.userRole === 'admin' || data.userRole === 'maintainer');
         } catch (error) {

@@ -1,3 +1,7 @@
+/**
+ * @file Unit tests for API endpoint for invalid calls.
+ * @author Irving de Boer
+ */
 import app from "../app"
 import supertest from "supertest";
 

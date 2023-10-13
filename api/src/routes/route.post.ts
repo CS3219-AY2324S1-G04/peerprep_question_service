@@ -1,3 +1,7 @@
+/**
+ * @file Handles POST request endpoints.
+ * @author Irving de Boer
+ */
 import {Routes} from "./routes";
 import {QuestionService} from "../database/question.database";
 import {Request, Response} from 'express';
@@ -16,7 +20,8 @@ export class PostRoute extends Routes {
     private _addQuestion = async (req: Request, res: Response) => {
         try {
             const body: IQuestion = req.body;
-            const sessionToken: string = req.cookies['session_token'];
+            const sessionToken: string = req.cookies['session-token'];
+
             const isAuthorized = await this._checkUserRole(sessionToken);
 
             if (!isAuthorized) {

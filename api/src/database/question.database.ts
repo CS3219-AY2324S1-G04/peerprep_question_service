@@ -2,8 +2,8 @@
  * @file Manages the database queries.
  * @author Irving de Boer
  */
-import { IFilter, IQuestion } from '../interface/question.interface';
-import { question } from '../models/question.model';
+import {IFilter, IQuestion} from '../interface/question.interface';
+import {question} from '../models/question.model';
 
 export class QuestionService {
   /**
@@ -11,7 +11,10 @@ export class QuestionService {
    * @returns - A promise to queried document.
    */
   public findAll(limit: number, offset: number): Promise<IQuestion[]> {
-    return question.find({}, null, {limit: limit, skip: offset}).select(['-description']).exec();
+    return question.find({deleted: false}, null, {
+      limit: limit,
+      skip: offset
+    }).select('-description -deleted -deletedAt').exec();
   }
 
   /**
@@ -20,7 +23,7 @@ export class QuestionService {
    * @returns - A promise to the queried document.
    */
   public findOneById(questionId: string): Promise<IQuestion | null> {
-    return question.findById(questionId).exec();
+    return question.findById(questionId).select('-deleted -deletedAt').exec();
   }
 
   /**
@@ -34,7 +37,7 @@ export class QuestionService {
     }
 
     console.log({ ...filter });
-    return question.find({ ...filter }).exec();
+    return question.find({...filter, deleted: false}).select('-deleted -deletedAt').exec();
   }
 
   /**
@@ -56,9 +59,11 @@ export class QuestionService {
           description: body.description,
           categories: body.categories,
           complexity: body.complexity,
+          deleted: false,
+          deletedAt: null,
         },
         { new: true },
-      )
+      ).select('-deleted -deletedAt')
       .exec();
   }
 
@@ -74,6 +79,8 @@ export class QuestionService {
       description: body.description,
       categories: body.categories,
       complexity: body.complexity,
+      deleted: false,
+      deletedAt: null,
     });
   }
 
@@ -83,7 +90,23 @@ export class QuestionService {
    * @returns - A promise to the deleted queried document.
    */
   public findAndDelete(id: string): Promise<IQuestion | null> {
-    return question.findByIdAndDelete(id).exec();
+    return question.findByIdAndUpdate(id, {
+      deleted: true,
+      deletedAt: Date.now()
+    }).select('-deleted -deletedAt').exec();
+  }
+
+  /**
+   * Deletes a question from the database based on whether it is marked as deleted and more than an hour has passed from
+   * deletedOn date
+   * @returns - A promise to the deleted documents.
+   */
+  public removeFromDatabase(): Promise<any> {
+
+
+    const oneHourAgo = new Date();
+    oneHourAgo.setHours(oneHourAgo.getHours() - 1);
+    return question.deleteMany({deleted: true, deletedAt: {$lte: oneHourAgo}}).exec();
   }
 
   /**
