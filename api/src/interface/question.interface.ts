@@ -11,6 +11,8 @@ export interface IQuestion extends Document {
   description: string;
   categories: Array<string>;
   complexity: string;
+  deleted: boolean;
+  deletedAt: Date;
 }
 
 export interface IFilter {

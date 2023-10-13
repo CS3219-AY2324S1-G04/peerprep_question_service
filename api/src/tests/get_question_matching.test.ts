@@ -1,3 +1,7 @@
+/**
+ * @file Unit tests for API endpoint to retrieve question for question matching.
+ * @author Irving de Boer
+ */
 import supertest from "supertest";
 import {QuestionService} from "../database/question.database";
 import {mockData} from "./mock_data";

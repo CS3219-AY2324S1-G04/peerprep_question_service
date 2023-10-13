@@ -1,3 +1,7 @@
+/**
+ * @file Handles get request endpoints.
+ * @author Irving de Boer
+ */
 import {Routes} from "./routes";
 import {QuestionService} from "../database/question.database";
 import {Request, Response} from 'express';

@@ -1,3 +1,7 @@
+/**
+ * @file Mock data for unit tests.
+ * @author Irving de Boer
+ */
 export const mockData = [
     {
         _id: "60f1b5b0e1b9a1b4c8a7a8a1",

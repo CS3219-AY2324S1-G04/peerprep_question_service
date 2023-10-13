@@ -1,3 +1,7 @@
+/**
+ * @file Handles PUT request endpoints.
+ * @author Irving de Boer
+ */
 import {Routes} from "./routes";
 import {QuestionService} from "../database/question.database";
 import {Request, Response} from 'express';
@@ -18,7 +22,7 @@ export class PutRoute extends Routes {
             const questionId: string = req.params.id;
             const body: IQuestion = req.body;
 
-            const sessionToken: string = req.cookies['session_token'];
+            const sessionToken: string = req.cookies['session-token'];
 
             const isAuthorized = await this._checkUserRole(sessionToken);
 

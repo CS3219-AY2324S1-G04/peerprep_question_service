@@ -1,3 +1,7 @@
+/**
+ * @file Unit tests for API endpoint to read questions by ID.
+ * @author Irving de Boer
+ */
 import supertest from "supertest";
 import {QuestionService} from "../database/question.database";
 import newApp from "../app";

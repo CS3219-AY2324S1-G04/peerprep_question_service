@@ -1,3 +1,7 @@
+/**
+ * @file Starts the server on defined port.
+ * @author Irving de Boer
+ */
 import {Routes} from "./routes";
 import {QuestionService} from "../database/question.database";
 import {Request, Response} from 'express';
@@ -19,7 +23,7 @@ export class DeleteRoute extends Routes {
     ) => {
         try {
             const questionId: string = req.params.id;
-            const sessionToken: string = req.cookies['session_token'];
+            const sessionToken: string = req.cookies['session-token'];
 
             const isAuthorized = await this._checkUserRole(sessionToken);
 
