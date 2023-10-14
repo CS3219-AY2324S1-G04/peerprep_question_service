@@ -104,9 +104,9 @@ export class QuestionService {
   public removeFromDatabase(): Promise<any> {
 
 
-    const oneHourAgo = new Date();
-    oneHourAgo.setHours(oneHourAgo.getHours() - 1);
-    return question.deleteMany({deleted: true, deletedAt: {$lte: oneHourAgo}}).exec();
+    const oneDayAgo = new Date();
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+    return question.deleteMany({deleted: true, deletedAt: {$lte: oneDayAgo}}).exec();
   }
 
   /**
