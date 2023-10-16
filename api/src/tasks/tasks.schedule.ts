@@ -1,3 +1,7 @@
+/**
+ * @file Scheduler that runs every day at midnight to delete questions from the database.
+ * @author Irving de Boer
+ */
 import * as cron from 'cron'
 import {QuestionService} from "../database/question.database";
 
