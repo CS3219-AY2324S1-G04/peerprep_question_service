@@ -85,6 +85,8 @@ Retrieves all questions in the database.
 
 **Parameters**
 
+- `complexity` - The complexity of the question (Optional)
+- `categories` - The categories of the question (Optional) - Can be multiple
 - `limit` - The max number of questions in response (Optional)
 - `offset` - The offset for the first question in response (Optional)
 
@@ -167,7 +169,7 @@ Retrieves a random question by matching params.
 **Parameters**
 
 - `complexity` - The complexity of the question (Required)
-- `categories[]` - The categories of the question (Optional)
+- `categories` - The categories of the question (Optional) - Can be multiple
 
 **Response**
 
