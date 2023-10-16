@@ -19,3 +19,8 @@ export interface IFilter {
   categories: Array<string>;
   complexity: string;
 }
+
+export interface IPagination {
+  limit: number;
+  skip: number;
+}

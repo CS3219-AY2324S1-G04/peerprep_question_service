@@ -2,10 +2,10 @@
  * @file Handles get request endpoints.
  * @author Irving de Boer
  */
-import {Routes} from "./routes";
-import {QuestionService} from "../database/question.database";
-import {Request, Response} from 'express';
-import {IFilter} from "../interface/question.interface";
+import { Routes } from './routes';
+import { QuestionService } from '../database/question.database';
+import { Request, Response } from 'express';
+import { IFilter, IPagination } from '../interface/question.interface';
 
 export class GetRoute extends Routes {
     constructor(questionService: QuestionService) {
@@ -23,7 +23,22 @@ export class GetRoute extends Routes {
         try {
             const limit : number = Number(req.query.limit as string);
             const offset : number = Number(req.query.offset as string);
-            const question = await this._questionService.findAll(limit, offset);
+
+            const complexity: string = req.query.complexity as string;
+            let categories: Array<string> = req.query
+              .categories as Array<string>;
+
+            const page : IPagination = {
+                limit: limit,
+                skip: offset,
+            }
+
+            const filter : IFilter = {
+                complexity: complexity,
+                categories: categories,
+            };
+
+            const question = await this._questionService.findAll(page, filter);
             res.status(200).send(this._getStandardResponse('success', question, null));
         } catch (e) {
             if (e instanceof Error) {
@@ -61,7 +76,7 @@ export class GetRoute extends Routes {
                 return;
             }
 
-            const filter: IFilter = {
+            const filter = {
                 complexity: complexity,
                 categories: categories,
             };

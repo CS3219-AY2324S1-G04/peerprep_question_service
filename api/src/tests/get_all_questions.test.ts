@@ -11,15 +11,30 @@ describe('Testing API endpoints for retrieving all questions', () => {
 
     describe('GET /question-service/questions', () => {
         describe('Successful request', () => {
-            it('Should return status code 200 and a list of questions in database', async () => {
-                jest.spyOn(QuestionService.prototype, 'findAll')
-                    // @ts-ignore
-                    .mockReturnValueOnce(Promise.resolve(mockData));
-                const {statusCode} = await supertest(newApp).get('/question-service/questions');
-                expect(QuestionService.prototype.findAll).toHaveBeenCalled();
-                expect(statusCode).toBe(200);
+            describe('Request with no filter', () => {
+                it('Should return status code 200 and a list of questions in database', async () => {
+                    jest.spyOn(QuestionService.prototype, 'findAll')
+                        // @ts-ignore
+                        .mockReturnValueOnce(Promise.resolve(mockData));
+                    const {statusCode} = await supertest(newApp).get('/question-service/questions');
+                    expect(QuestionService.prototype.findAll).toHaveBeenCalled();
+                    expect(statusCode).toBe(200);
+                });
+            });
+
+            describe('Request with filter', () => {
+                it('Should return status code 200 and a list of questions in database', async () => {
+                    jest.spyOn(QuestionService.prototype, 'findAll')
+                        // @ts-ignore
+                        .mockReturnValueOnce(Promise.resolve(mockData[0]));
+                    const {statusCode} = await supertest(newApp)
+                        .get('/question-service/questions?complexity=Easy&categories[]=Algorithms&categories[]=Strings');
+                    expect(QuestionService.prototype.findAll).toHaveBeenCalled();
+                    expect(statusCode).toBe(200);
+                });
             });
         });
+
 
         describe('Unsuccessful request', () => {
            it('Should return status code 500 and an error message', async () => {
