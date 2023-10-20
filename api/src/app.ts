@@ -16,6 +16,7 @@ import {PostRoute} from "./routes/route.post";
 import {PutRoute} from "./routes/route.put";
 import {DeleteRoute} from "./routes/route.delete";
 import {Scheduler} from "./tasks/tasks.schedule";
+import { MONGO_URI } from './constants/question-service-api.constants';
 
 dotenv.config();
 
@@ -62,7 +63,6 @@ class App {
   }
 
   private _setMongoConfig() {
-    const MONGO_URI = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_DOCKER_PORT}/questions?authSource=admin`;
 
     if (process.env.NODE_ENV !== 'test') {
     mongoose
