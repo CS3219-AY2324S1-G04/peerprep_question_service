@@ -6,7 +6,7 @@
   "scripts": {
     "start:dev": "nodemon",
     "start": "npm run build && node ./build/server.js",
-    "build": "rimraf ./build && tsc",
+    "build": "rimraf ./build && tsc -p ./tsconfig.build.json",
     "test": "cross-env NODE_ENV=test jest src/tests",
     "format": "prettier --config .prettierrc --write 'src/**/*.ts' --write 'src/tests/**/*.ts'",
     "lint": "eslint . --ext .ts",

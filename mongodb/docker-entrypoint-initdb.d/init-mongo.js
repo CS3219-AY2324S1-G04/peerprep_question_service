@@ -1,16 +1,16 @@
 db.createUser({
-  user: "root",
-  pwd: "password",
+  user: process.env.MONGODB_USER,
+  pwd: process.env.MONGODB_PASSWORD,
   roles: [
     {
       role: "readWrite",
-      db: "testDB",
+      db: process.env.MONGO_DB,
     },
   ],
 });
 
-db = new Mongo().getDB("questions");
-db.createCollection("questions");
+db = new Mongo().getDB(process.env.MONGO_DB);
+db.createCollection(process.env.MONGO_DB);
 
 
 const data = [

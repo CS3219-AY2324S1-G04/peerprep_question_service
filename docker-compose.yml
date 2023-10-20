@@ -2,25 +2,26 @@ version: '3.8'
 
 services:
   # REST API - Question Service
-  api:
+  question_service_api:
     container_name: question_service_api
     image: peerprep_question_service_api
     build: ./api
-    restart: always
+    restart: unless-stopped
     env_file:
       - .env
     ports:
       # local->container
       - ${EXPRESS_LOCAL_PORT}:${EXPRESS_DOCKER_PORT}
     depends_on:
-      - mongo
+      - question_service_db
     networks:
       - peerprep
 
   # Database - Mongo DB
-  mongo:
+  question_service_db:
     container_name: question_service_db
-    image: mongo:latest
+    image: peerprep_question_service_db
+    build: ./mongodb
     restart: unless-stopped
     env_file:
       - .env
