@@ -65,7 +65,7 @@ export class QuestionService {
     }
 
     console.log({ ...filter });
-    return question.find({...filter, deleted: false}).select('-deleted -deletedAt').exec();
+    return question.find({...filter, deleted: false}).select('_id title').exec();
   }
 
   /**
