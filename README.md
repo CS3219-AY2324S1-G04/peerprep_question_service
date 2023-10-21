@@ -148,7 +148,14 @@ Retrieves a question by its ID.
           "title": "Example Question",
           "description": "Placeholder Description",
           "complexity": "Easy",
-          "categories": ["Arrays"]   
+          "categories": ["Arrays"],
+          "template": [
+            {
+              "language": "C++",
+              "langSlug": "cpp",
+              "code": "class Solution {\npublic:\n    int lengthOfLongestSubstring(string s) {\n        \n    }\n};"  
+            }
+          ]   
         },
         "message": null
       }
