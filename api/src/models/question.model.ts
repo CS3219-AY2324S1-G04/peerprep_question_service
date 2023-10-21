@@ -11,8 +11,15 @@ const questionModel = new Schema({
   description: { type: String, required: [true, 'Field is required'] },
   categories: { type: Array<string>, required: [true, 'Field is required'] },
   complexity: { type: String, required: [true, 'Field is required'] },
-  deleted: {type: Boolean, default: false, required: [true, 'Field is required']},
-  deletedAt: {type: Date, default: null},
+  template: [
+    {
+      language: { type: String, required: false },
+      langSlug: { type: String, required: false},
+      code: { type: String, required: false }
+    }
+  ],
+  deleted: { type: Boolean, default: false, required: [true, 'Field is required'] },
+  deletedAt: { type: Date, default: null }
 });
 
 export const question = model<IQuestion>('Question', questionModel);

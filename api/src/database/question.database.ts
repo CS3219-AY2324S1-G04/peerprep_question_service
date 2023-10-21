@@ -22,7 +22,7 @@ export class QuestionService {
       if (filter.categories == undefined) {
         return question.find({ deleted: false }, null, {
           ...page
-        }).select('-description -deleted -deletedAt').exec();
+        }).select('-description -deleted -deletedAt -template').exec();
       }
     }
 
@@ -65,7 +65,7 @@ export class QuestionService {
     }
 
     console.log({ ...filter });
-    return question.find({...filter, deleted: false}).select('-deleted -deletedAt').exec();
+    return question.find({...filter, deleted: false}).select('_id title').exec();
   }
 
   /**
