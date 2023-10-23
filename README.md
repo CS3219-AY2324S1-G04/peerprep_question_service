@@ -139,6 +139,10 @@ Retrieves a question by its ID.
       - description
       - complexity
       - categories
+      - template
+        - language
+        - langSlug
+        - code
     - Example Response Body
       ```json
       {
@@ -184,19 +188,13 @@ Retrieves a random question by matching params.
     - Returns question with matching filters as JSON Object with the following fields:
         - id
         - title
-        - description
-        - complexity
-        - categories
     - Example Response Body
       ```json
       {
         "status": "success",
         "data": {
           "id": "123",
-          "title": "Example Question",
-          "description": "Placeholder Description",
-          "complexity": "Easy",
-          "categories": ["Arrays"]   
+          "title": "Example Question"
         },
         "message": null
       }
