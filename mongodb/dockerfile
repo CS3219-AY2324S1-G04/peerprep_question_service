@@ -1,7 +1,0 @@
-FROM mongo:latest
-
-COPY ./docker-entrypoint-initdb.d/init-mongo.js /docker-entrypoint-initdb.d/
-
-RUN apt-get update && apt-get install apache2-utils -y
-RUN chmod 744 /docker-entrypoint-initdb.d/init-mongo.js
-

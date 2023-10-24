@@ -20,15 +20,13 @@ services:
   # Database - Mongo DB
   question_service_db:
     container_name: question_service_db
-    image: peerprep_question_service_db
-    build: ./mongodb
+    image: mongo:latest
     restart: unless-stopped
     env_file:
       - .env
     environment:
-      MONGODB_USER: ${MONGODB_USER}
-      MONGODB_PASSWORD: ${MONGODB_PASSWORD}
-      MONGODB_HOST: ${MONGODB_HOST}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
     ports:
       - ${MONGODB_LOCAL_PORT}:${MONGODB_DOCKER_PORT}
     volumes:
