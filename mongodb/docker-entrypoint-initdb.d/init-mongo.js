@@ -9,7 +9,7 @@ db.createUser({
   ],
 });
 
-db = new Mongo().getDB(process.env.MONGO_D);
+db = new Mongo().getDB(process.env.MONGO_DB);
 db.createCollection('questions');
 
 
