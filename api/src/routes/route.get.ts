@@ -17,6 +17,7 @@ export class GetRoute extends Routes {
         this.router.route('/questions/:id').get(this._findOneById);
         this.router.route('/question-matching/question').get(this._findByParams);
         this.router.route('/categories').get(this._getCategories);
+        this.router.route('/languages').get(this._getAllLanguages);
     }
 
     private _findAll = async (req: Request, res: Response) => {
@@ -106,4 +107,15 @@ export class GetRoute extends Routes {
             }
         }
     };
+
+    private _getAllLanguages = async (req: Request, res: Response)=> {
+        try {
+            const languages : Array<any> = await this._questionService.getAllLanguages();
+            res.status(200).send(this._getStandardResponse('success', languages, null));
+        } catch (e) {
+            if (e instanceof Error) {
+                res.status(500).send(this._getErrorResponse(500, e.message));
+            }
+        }
+    }
 }

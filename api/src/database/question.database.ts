@@ -144,8 +144,33 @@ export class QuestionService {
    */
   public async getCategories() : Promise<Array<string>> {
     const data : Array<string> = await question.distinct('categories').exec();
-
-    //filter duplicates
     return data.sort();
+  }
+
+  /**
+   * Retrieves all languages and respective langSlugs from the database.
+   * @returns - A promise to an array of objects containing language and langSlug.
+   */
+  public async getAllLanguages(): Promise<Array<IQuestion>> {
+    const data: Array<IQuestion> = await question.find({ deleted: false }).select('template').exec();
+
+    let formattedData: Array<any> = [];
+    data.forEach((question) => {
+      question.template.forEach((template) => {
+        formattedData.push({
+          language: template.language,
+          langSlug: template.langSlug
+        });
+      });
+    });
+
+    //remove duplicates
+    formattedData = formattedData.filter((item, index, self) =>
+        index === self.findIndex((t) => (
+          t.language === item.language && t.langSlug === item.langSlug
+        ))
+    );
+
+    return formattedData;
   }
 }
