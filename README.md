@@ -21,6 +21,8 @@ The `docker-compose.yml` file starts 2 Docker containers.
         - [Update a question by ID](#update-question)
         - [Add a question to database](#add-question)
         - [Delete a question by ID](#delete-question)
+        - [Get all categories](#get-categories)
+        - [Get all languages](#get-languages)
 
 
 ## Quickstart Guide
@@ -353,6 +355,41 @@ Retrieves all unique categories in the database.
       "message": null
     }
     ```
+- `500` - Error
+    - Unexpected error occurred on the server.
+
+
+### Get Languages
+
+> [GET] `/question-service/language`
+
+Retrieves all unique languages in the database.
+
+**Response**
+
+- `200` - Success.
+    - Returns categories as an Array of objects with the fields `language` and `langSlug`
+    - Example Response Body
+      ```json
+      {
+        "status": "success",
+        "data": [
+          {
+            "language": "C++",
+            "langSlug": "cpp"
+          },
+          {
+            "language": "Java",
+            "langSlug": "java"
+          },
+          {
+            "language": "Python",
+            "langSlug": "python"
+          }
+        ],
+        "message": null
+      }
+      ```
 - `500` - Error
     - Unexpected error occurred on the server.
 

@@ -13,6 +13,7 @@ export interface IQuestion extends Document {
   complexity: string;
   template: [
     {
+      _id: string;
       language: string;
       langSlug: string;
       code: string;
