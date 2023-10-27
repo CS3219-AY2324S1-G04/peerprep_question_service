@@ -34,7 +34,6 @@ services:
       - ${MONGODB_LOCAL_PORT}:${MONGODB_DOCKER_PORT}
     volumes:
       - ./mongodb/docker-entrypoint-initdb.d/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ./mongodb/data:/data/db
     networks:
       - peerprep
 
