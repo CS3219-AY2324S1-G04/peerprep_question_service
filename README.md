@@ -361,7 +361,7 @@ Retrieves all unique categories in the database.
 
 ### Get Languages
 
-> [GET] `/question-service/language`
+> [GET] `/question-service/languages`
 
 Retrieves all unique languages in the database.
 
