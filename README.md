@@ -183,7 +183,7 @@ Retrieves a random question by matching params.
 
 - `complexity` - The complexity of the question (Required)
 - `categories` - The categories of the question (Optional) - Can be multiple
-- `language` - The language of the question (Required)
+- `language` - The langSlug of the question (Required)
 
 **Response**
 
