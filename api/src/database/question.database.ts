@@ -64,6 +64,15 @@ export class QuestionService {
       filter.categories.sort();
     }
 
+    if (filter.categories == undefined) {
+      return question.find({
+        complexity: filter.complexity,
+        deleted: false
+      })
+        .select(`-deleted -deletedAt -template -description
+     -categories -complexity`).exec();
+    }
+
     return question.find({
       complexity: filter.complexity,
       categories: { '$in': filter.categories },
