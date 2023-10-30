@@ -63,7 +63,7 @@ export class QuestionService {
     if (filter.categories != undefined && Array.isArray(filter.categories)) {
       filter.categories.sort();
     }
-    
+
     return question.find({
       complexity: filter.complexity,
       categories: { '$in': filter.categories },
