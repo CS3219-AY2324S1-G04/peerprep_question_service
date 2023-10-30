@@ -63,9 +63,13 @@ export class QuestionService {
     if (filter.categories != undefined && Array.isArray(filter.categories)) {
       filter.categories.sort();
     }
-
-    console.log({ ...filter });
-    return question.find({ ...filter, deleted: false }).select(`-deleted -deletedAt -template -description
+    
+    return question.find({
+      complexity: filter.complexity,
+      categories: { '$in': filter.categories },
+      deleted: false
+    })
+      .select(`-deleted -deletedAt -template -description
      -categories -complexity`).exec();
   }
 
@@ -152,25 +156,18 @@ export class QuestionService {
    * @returns - A promise to an array of objects containing language and langSlug.
    */
   public async getAllLanguages(): Promise<Array<IQuestion>> {
-    const data: Array<IQuestion> = await question.find({ deleted: false }).select('template').exec();
+    const data: Array<IQuestion> = await question.distinct('template', { deleted: false }).exec();
 
-    let formattedData: Array<any> = [];
-    data.forEach((question) => {
-      question.template.forEach((template) => {
-        formattedData.push({
-          language: template.language,
-          langSlug: template.langSlug
-        });
-      });
+
+    data.forEach((question: any) => {
+      delete question._id;
+      delete question.code;
     });
 
-    //remove duplicates
-    formattedData = formattedData.filter((item, index, self) =>
+    return data.filter((item: any, index, self: any[]) =>
         index === self.findIndex((t) => (
           t.language === item.language && t.langSlug === item.langSlug
         ))
     );
-
-    return formattedData;
   }
 }

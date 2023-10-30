@@ -70,7 +70,9 @@ export class GetRoute extends Routes {
             const categories: Array<string>  = req.query
                 .categories as Array<string>;
 
-            if (!req.query || !req.query.complexity || complexity === '') {
+            const isValidParams = !req.query || !req.query.complexity || complexity === '';
+
+            if (isValidParams) {
                 res
                     .status(400)
                     .send(this._getErrorResponse(400, 'Missing parameters in query'));
