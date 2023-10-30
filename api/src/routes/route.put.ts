@@ -27,7 +27,7 @@ export class PutRoute extends Routes {
             const isAuthorized = await this._checkUserRole(sessionToken);
 
             if (!isAuthorized) {
-                res.status(401).send(this._getErrorResponse(401, 'Unauthorised user. Only admins and maintainers may perform this role.'));
+                res.status(403).send(this._getErrorResponse(403, 'Unauthorised user. Only admins and maintainers may perform this role.'));
                 return;
             }
 

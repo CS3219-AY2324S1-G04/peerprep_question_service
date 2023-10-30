@@ -16,7 +16,10 @@ export class QuestionService {
    * @param filter - Filter parameters consisting of complexity and categories.
    * @returns - A promise to queried document.
    */
-  public findAll(page: IPagination, filter: IFilter): Promise<IQuestion[]> {
+  public findAll(page: IPagination, filter: {
+    categories: Array<string>,
+    complexity: string
+  }): Promise<IQuestion[]> {
 
     if (filter.categories == undefined && filter.complexity == undefined) {
       if (filter.categories == undefined) {
@@ -59,27 +62,38 @@ export class QuestionService {
    * @param filter - Filter parameters consisting of complexity and categories.
    * @returns - A promise to the queried document.
    */
-  public findByParams(filter: IFilter): Promise<IQuestion[]> {
+  public async findByParams(filter: IFilter): Promise<IQuestion[]> {
     if (filter.categories != undefined && Array.isArray(filter.categories)) {
       filter.categories.sort();
     }
 
+    let result: IQuestion[];
+
     if (filter.categories == undefined) {
-      return question.find({
+      result = await question.find({
         complexity: filter.complexity,
         deleted: false
       })
-        .select(`-deleted -deletedAt -template -description
+        .select(`-deleted -deletedAt -description
+     -categories -complexity`).exec();
+    } else {
+      result = await question.find({
+        complexity: filter.complexity,
+        categories: { '$in': filter.categories },
+        deleted: false
+      })
+        .select(`-deleted -deletedAt -description
      -categories -complexity`).exec();
     }
 
-    return question.find({
-      complexity: filter.complexity,
-      categories: { '$in': filter.categories },
-      deleted: false
-    })
-      .select(`-deleted -deletedAt -template -description
-     -categories -complexity`).exec();
+    if (result == undefined || result.length == 0) {
+      return result;
+    }
+
+    return result.filter(item => {
+      return item.template.some(t => t.langSlug === filter.language);
+    });
+
   }
 
   /**

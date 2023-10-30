@@ -5,7 +5,7 @@
 import { Routes } from './routes';
 import { QuestionService } from '../database/question.database';
 import { Request, Response } from 'express';
-import { IFilter, IPagination } from '../interface/question.interface';
+import { IPagination } from '../interface/question.interface';
 
 export class GetRoute extends Routes {
     constructor(questionService: QuestionService) {
@@ -34,7 +34,7 @@ export class GetRoute extends Routes {
                 skip: offset,
             }
 
-            const filter : IFilter = {
+            const filter: { complexity: string; categories: Array<string> } = {
                 complexity: complexity,
                 categories: categories,
             };
@@ -70,7 +70,9 @@ export class GetRoute extends Routes {
             const categories: Array<string>  = req.query
                 .categories as Array<string>;
 
-            const isValidParams = !req.query || !req.query.complexity || complexity === '';
+            const language: string = req.query.language as string;
+
+            const isValidParams = !req.query || !req.query.complexity || complexity === '' || !req.query.language || language === '';
 
             if (isValidParams) {
                 res
@@ -82,13 +84,18 @@ export class GetRoute extends Routes {
             const filter = {
                 complexity: complexity,
                 categories: categories,
+                language: language
             };
 
             const questionList = await this._questionService.findByParams(filter);
 
             const questionListLength = questionList.length;
             const randomIndex = Math.floor(Math.random() * questionListLength);
-            const question = questionList[randomIndex];
+            let question: any = questionList[randomIndex];
+
+            if (question !== undefined) {
+                question.template = undefined;
+            }
 
             res.status(200).send(this._getStandardResponse('success', question, null));
         } catch (e) {

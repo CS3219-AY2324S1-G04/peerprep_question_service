@@ -4,7 +4,6 @@
  */
 import {Router} from "express";
 import {QuestionService} from "../database/question.database";
-import {IQuestion} from "../interface/question.interface";
 
 
 export abstract class Routes {
@@ -27,7 +26,7 @@ export abstract class Routes {
 
     protected _getStandardResponse = function (
         status: string,
-        data: IQuestion | IQuestion[] | Array<String> | null,
+        data: any,
         message: string | null,
     ) {
         return {

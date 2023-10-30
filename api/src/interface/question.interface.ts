@@ -25,6 +25,7 @@ export interface IQuestion extends Document {
 export interface IFilter {
   categories: Array<string>;
   complexity: string;
+  language: string;
 }
 
 export interface IPagination {
