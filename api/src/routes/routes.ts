@@ -4,7 +4,6 @@
  */
 import {Router} from "express";
 import {QuestionService} from "../database/question.database";
-import { RedisClientType } from 'redis';
 
 
 export abstract class Routes {

@@ -6,7 +6,7 @@ import { Routes } from './routes';
 import { QuestionService } from '../database/question.database';
 import { Request, Response } from 'express';
 import { IPagination, IQuestion } from '../interface/question.interface';
-import { RedisClientType } from 'redis';
+
 
 export class GetRoute extends Routes {
     constructor(questionService: QuestionService, redis: any) {
