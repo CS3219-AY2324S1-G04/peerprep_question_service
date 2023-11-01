@@ -4,13 +4,16 @@
  */
 import {Router} from "express";
 import {QuestionService} from "../database/question.database";
+import { RedisClientType } from 'redis';
 
 
 export abstract class Routes {
     public router;
+    public redis;
 
-    protected constructor(protected _questionService: QuestionService) {
+    protected constructor(protected _questionService: QuestionService, redis: any) {
         this.router = Router();
+        this.redis = redis;
     };
 
     protected abstract _setRoutes(): void;

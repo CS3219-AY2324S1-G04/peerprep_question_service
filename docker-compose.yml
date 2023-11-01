@@ -14,6 +14,7 @@ services:
       - ${EXPRESS_LOCAL_PORT}:${EXPRESS_DOCKER_PORT}
     depends_on:
       - question_service_db
+      - question_service_cache
     networks:
       - peerprep
 
@@ -34,6 +35,18 @@ services:
       - ${MONGODB_LOCAL_PORT}:${MONGODB_DOCKER_PORT}
     volumes:
       - ./mongodb/docker-entrypoint-initdb.d/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - peerprep
+
+  # Redis Cache
+  question_service_cache:
+    container_name: question_service_cache
+    image: redis:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${REDIS_LOCAL_PORT}:${REDIS_DOCKER_PORT}
     networks:
       - peerprep
 
