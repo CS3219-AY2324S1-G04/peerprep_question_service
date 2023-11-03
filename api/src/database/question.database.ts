@@ -8,8 +8,16 @@ import {
   IQuestion
 } from '../interface/question.interface';
 import { question } from '../models/question.model';
+import { QuestionCache } from './question.cache';
 
 export class QuestionService {
+
+  private _questionCache: QuestionCache;
+
+  public constructor() {
+    this._questionCache = new QuestionCache();
+  }
+
   /**
    * Retrieves all questions in the database.
    * @param page - Pagination parameters consisting of limit and offset.
@@ -107,6 +115,9 @@ export class QuestionService {
     body: IQuestion,
   ): Promise<IQuestion | null> {
     body.categories.sort();
+
+    this._questionCache.clearCache();
+
     return question
       .findByIdAndUpdate(
         questionId,
@@ -130,6 +141,8 @@ export class QuestionService {
    */
   public addQuestion(body: IQuestion): Promise<IQuestion | null> {
     body.categories.sort();
+    this._questionCache.clearCache();
+
     return question.create({
       title: body.title,
       description: body.description,
@@ -146,6 +159,9 @@ export class QuestionService {
    * @returns - A promise to the deleted queried document.
    */
   public findAndDelete(id: string): Promise<IQuestion | null> {
+
+    this._questionCache.clearCache();
+
     return question.findByIdAndUpdate(id, {
       deleted: true,
       deletedAt: Date.now()
@@ -159,7 +175,6 @@ export class QuestionService {
    */
   public removeFromDatabase(): Promise<any> {
 
-
     const oneDayAgo = new Date();
     oneDayAgo.setDate(oneDayAgo.getDate() - 1);
     return question.deleteMany({deleted: true, deletedAt: {$lte: oneDayAgo}}).exec();
@@ -170,7 +185,17 @@ export class QuestionService {
    * @returns - A promise to the queried document.
    */
   public async getCategories() : Promise<Array<string>> {
+
+    const categoriesCache = await this._questionCache.getCategories();
+    if (categoriesCache) {
+      return categoriesCache;
+    }
+
     const data : Array<string> = await question.distinct('categories').exec();
+
+    const sortedData = data.sort();
+    this._questionCache.setCategories(sortedData);
+
     return data.sort();
   }
 
@@ -179,18 +204,28 @@ export class QuestionService {
    * @returns - A promise to an array of objects containing language and langSlug.
    */
   public async getAllLanguages(): Promise<Array<IQuestion>> {
+
+    const cacheRequest = await this._questionCache.getLanguages();
+
+    if (cacheRequest != null) {
+      return cacheRequest;
+    }
+
     const data: Array<IQuestion> = await question.distinct('template', { deleted: false }).exec();
-
-
     data.forEach((question: any) => {
       delete question._id;
       delete question.code;
     });
 
-    return data.filter((item: any, index, self: any[]) =>
+    const languageData = data.filter((item: any, index, self: any[]) =>
         index === self.findIndex((t) => (
           t.language === item.language && t.langSlug === item.langSlug
         ))
     );
+
+    // update redis cache
+    this._questionCache.setLanguages(languageData);
+
+    return languageData;
   }
 }
