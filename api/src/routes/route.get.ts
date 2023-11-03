@@ -5,11 +5,12 @@
 import { Routes } from './routes';
 import { QuestionService } from '../database/question.database';
 import { Request, Response } from 'express';
-import { IPagination } from '../interface/question.interface';
+import { IPagination, IQuestion } from '../interface/question.interface';
+
 
 export class GetRoute extends Routes {
-    constructor(questionService: QuestionService) {
-        super(questionService);
+    constructor(questionService: QuestionService, redis: any) {
+        super(questionService, redis);
         this._setRoutes();
     }
     protected _setRoutes() {
@@ -39,7 +40,9 @@ export class GetRoute extends Routes {
                 categories: categories,
             };
 
-            const question = await this._questionService.findAll(page, filter);
+            let question: IQuestion[];
+
+            question = await this._questionService.findAll(page, filter);
             res.status(200).send(this._getStandardResponse('success', question, null));
         } catch (e) {
             if (e instanceof Error) {

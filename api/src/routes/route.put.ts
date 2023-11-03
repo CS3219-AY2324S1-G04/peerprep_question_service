@@ -8,8 +8,8 @@ import {Request, Response} from 'express';
 import {IQuestion} from "../interface/question.interface";
 
 export class PutRoute extends Routes {
-    constructor(questionService: QuestionService) {
-        super(questionService);
+    constructor(questionService: QuestionService, redis: any) {
+        super(questionService, redis);
         this._setRoutes();
     }
 

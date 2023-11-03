@@ -6,10 +6,9 @@ import {Routes} from "./routes";
 import {QuestionService} from "../database/question.database";
 import {Request, Response} from 'express';
 
-
 export class DeleteRoute extends Routes {
-    constructor(questionService: QuestionService) {
-        super(questionService);
+    constructor(questionService: QuestionService, redis: any) {
+        super(questionService, redis);
         this._setRoutes();
     }
 
