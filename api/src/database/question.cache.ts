@@ -13,7 +13,6 @@ export class QuestionCache {
   }
 
   private async _setRedisConfig() {
-
     await this.client.connect();
 
     this.client.on('connect', () => {
@@ -24,14 +23,26 @@ export class QuestionCache {
     });
   }
 
+  /**
+   * Retrieves all questions from the cache.
+   * @param complexity - The complexity of the question.
+   * @param categories - The categories of the question.
+   */
   public getAllQuestions(complexity: string, categories: string[]) {
     const allQuestions = this.client.get('questions');
   }
 
+  /**
+   * Retrieves a specific question from the cache.
+   * @param questions - The questions to be set in the cache.
+   */
   public setAllQuestions(questions: IQuestion[]) {
     this.client.set('questions', JSON.stringify(questions));
   }
 
+  /**
+   * Retrieves distinct categories from the cache.
+   */
   public async getCategories() {
     const categories = await this.client.lRange('categories', 0, -1);
 
@@ -42,12 +53,19 @@ export class QuestionCache {
     return categories;
   }
 
+  /**
+   * Sets distinct categories in the cache.
+   * @param categories
+   */
   public setCategories(categories: string[]) {
     categories.forEach((category) => {
       this.client.rPush('categories', category);
     });
   }
 
+  /**
+   * Retrieves all languages from the cache.
+   */
   public async getLanguages() {
     const data = await this.client.lRange('languages', 0, -1);
 
@@ -60,12 +78,19 @@ export class QuestionCache {
     });
   }
 
+  /**
+   * Sets all languages in the cache.
+   * @param languages
+   */
   public setLanguages(languages: IQuestion[]) {
     languages.forEach((language) => {
       this.client.rPush('language', JSON.stringify(language));
     });
   }
 
+  /**
+   * Clears the cache.
+   */
   public clearCache() {
     this.client.flushAll();
   }
