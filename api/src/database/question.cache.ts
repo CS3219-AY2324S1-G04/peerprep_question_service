@@ -24,23 +24,6 @@ export class QuestionCache {
   }
 
   /**
-   * Retrieves all questions from the cache.
-   * @param complexity - The complexity of the question.
-   * @param categories - The categories of the question.
-   */
-  public getAllQuestions(complexity: string, categories: string[]) {
-    const allQuestions = this.client.get('questions');
-  }
-
-  /**
-   * Retrieves a specific question from the cache.
-   * @param questions - The questions to be set in the cache.
-   */
-  public setAllQuestions(questions: IQuestion[]) {
-    this.client.set('questions', JSON.stringify(questions));
-  }
-
-  /**
    * Retrieves distinct categories from the cache.
    */
   public async getCategories() {
@@ -85,7 +68,7 @@ export class QuestionCache {
   public setLanguages(languages: IQuestion[]) {
     languages.forEach((language) => {
       this.client.rPush('language', JSON.stringify(language));
-    });
+     });
   }
 
   /**
