@@ -126,6 +126,7 @@ export class QuestionService {
           description: body.description,
           categories: body.categories,
           complexity: body.complexity,
+          template: body.template,
           deleted: false,
           deletedAt: null,
         },
@@ -148,6 +149,7 @@ export class QuestionService {
       description: body.description,
       categories: body.categories,
       complexity: body.complexity,
+      template: body.template,
       deleted: false,
       deletedAt: null,
     });
