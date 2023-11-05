@@ -17,7 +17,10 @@ import { PostRoute } from './routes/route.post';
 import { PutRoute } from './routes/route.put';
 import { DeleteRoute } from './routes/route.delete';
 import { Scheduler } from './tasks/tasks.schedule';
-import { MONGO_URI } from './constants/question-service-api.constants';
+import {
+  MONGO_URI,
+  REDIS_HOST, REDIS_PORT
+} from './constants/question-service-api.constants';
 
 dotenv.config();
 
@@ -28,7 +31,7 @@ class App {
   public constructor() {
     this.app = express();
     this.redis = redis.createClient({
-      url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_DOCKER_PORT}`
+      url: `redis://${REDIS_HOST}:${REDIS_PORT}`
     });
     this._setConfig();
     this._setMongoConfig();
