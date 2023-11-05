@@ -221,6 +221,10 @@ The data for the new question is passed in the request body with the following f
 - `description` - The question description
 - `complexity` - The difficulty level of the question
 - `categories` - The different topics applicable to the question
+- `template` - The template code for the question
+  - `language` - The language of the template code
+  - `langSlug` - The language slug of the template code
+  - `code` - The template code
 
 **Cookies**
 
@@ -241,7 +245,14 @@ The data for the new question is passed in the request body with the following f
           "title": "Example Question",
           "description": "Placeholder Description",
           "complexity": "Easy",
-          "categories": ["Arrays"]   
+          "categories": ["Arrays"], 
+          "template": [
+            {
+              "language": "C++",
+              "langSlug": "cpp",
+              "code": "class Solution {\npublic:\n    int lengthOfLongestSubstring(string s) {\n        \n    }\n};"  
+            }
+          ]  
         },
         "message": "Question updated successfully"
       }
@@ -265,6 +276,10 @@ The data for the new question is passed in the request body with the following f
 - `description` - The question description
 - `complexity` - The difficulty level of the question
 - `categories` - The different topics applicable to the question
+- `template` - The template code for the question
+  - `language` - The language of the template code
+  - `langSlug` - The language slug of the template code
+  - `code` - The template code
 
 **Cookies**
 
@@ -285,7 +300,14 @@ The data for the new question is passed in the request body with the following f
           "title": "Example Question",
           "description": "Placeholder Description",
           "complexity": "Easy",
-          "categories": ["Arrays"]   
+          "categories": ["Arrays"],
+          "template": [
+            {
+              "language": "C++",
+              "langSlug": "cpp",
+              "code": "class Solution {\npublic:\n    int lengthOfLongestSubstring(string s) {\n        \n    }\n};"  
+            }
+          ]   
         },
         "message": "Question added successfully"
       }
