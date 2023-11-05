@@ -22,11 +22,14 @@ export class PostRoute extends Routes {
             const body: IQuestion = req.body;
             const sessionToken: string = req.cookies['session-token'];
 
-            const isAuthorized = await this._checkUserRole(sessionToken);
+            const userStatus = await this._checkUserRole(sessionToken);
 
-            if (!isAuthorized) {
-                res.status(401).send(this._getErrorResponse(401, 'Unauthorised user. Only admins and maintainers may perform this role.'));
-                return;
+            if (userStatus === 401) {
+                return res.status(407).send(this._getErrorResponse(407, 'Invalid session token'));
+            }
+
+            if (userStatus === 403) {
+                return res.status(403).send(this._getErrorResponse(403, 'Unauthorised. Only users with role type of admin or maintainer may perform this role.'));
             }
 
             const question = await this._questionService.addQuestion(body);
