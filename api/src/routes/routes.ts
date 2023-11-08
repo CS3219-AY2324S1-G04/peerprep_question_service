@@ -51,9 +51,9 @@ export abstract class Routes {
         }
 
         const data = await response.json();
-
+        console.log(data);
         // Check if the response body contains { "userRole": "admin" or "maintainer" }
-        if (data && (data.userRole === 'admin' || data.userRole === 'maintainer')) {
+        if (data && (data['user-role'] === 'admin' || data['user-role'] === 'maintainer')) {
             return 200;
         }
 
