@@ -33,7 +33,7 @@ export class QuestionService {
       if (filter.categories == undefined) {
         return question.find({ deleted: false }, null, {
           ...page
-        }).select('-description -deleted -deletedAt -template').exec();
+        }).select('-description -deleted -deletedAt -template._id -template.code').exec();
       }
     }
 
