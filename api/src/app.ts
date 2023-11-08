@@ -40,9 +40,15 @@ class App {
   }
 
   private _setConfig() {
+
+    const corsOptions = {
+      origin: new RegExp('http://localhost:[0-9]+'),
+      credentials: true,
+    }
+
     this.app.use(bodyParser.json({ limit: '50mb' }));
     this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-    this.app.use(cors());
+    this.app.use(cors(corsOptions));
     this.app.use(cookieParser());
   }
 
