@@ -21,8 +21,9 @@ services:
     image: redis:7-bookworm
     networks:
       - peerprep_network
-    # TODO: Set a password
-    # command: /bin/sh -c "redis-server --requirepass $$REDIS_HOST_PASSWORD"
+    command: /bin/sh -c "redis-server --requirepass $${REDIS_PASSWORD}"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     restart: unless-stopped
 
   # Databse initialiser
@@ -35,8 +36,11 @@ services:
       - peerprep_network
     environment:
       MONGO_URI_LOCAL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
+      REDIS_USERNAME: default
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_HOST: question_service_cache
       REDIS_DOCKER_PORT: 6379
+      REDIS_SHOULD_USE_TLS: false
       USER_SERVICE_HOST: ${USER_SERVICE_HOST}
       EXPRESS_DOCKER_PORT: 9001
       NODE_ENV: ${NODE_ENV}
@@ -63,8 +67,11 @@ services:
       tail -f /dev/null" # This keeps the container running
     environment:
       MONGO_URI_LOCAL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
+      REDIS_USERNAME: default
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_HOST: question_service_cache
       REDIS_DOCKER_PORT: 6379
+      REDIS_SHOULD_USE_TLS: false
       USER_SERVICE_HOST: ${USER_SERVICE_HOST}
       EXPRESS_DOCKER_PORT: 9001
       NODE_ENV: ${NODE_ENV}
@@ -85,8 +92,11 @@ services:
       - ${EXPRESS_LOCAL_PORT}:9001
     environment:
       MONGO_URI_LOCAL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
+      REDIS_USERNAME: default
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_HOST: question_service_cache
       REDIS_DOCKER_PORT: 6379
+      REDIS_SHOULD_USE_TLS: false
       USER_SERVICE_HOST: ${USER_SERVICE_HOST}
       EXPRESS_DOCKER_PORT: 9001
       NODE_ENV: ${NODE_ENV}
