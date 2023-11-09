@@ -21,38 +21,54 @@ export class QuestionService {
   /**
    * Retrieves all questions in the database.
    * @param page - Pagination parameters consisting of limit and offset.
-   * @param filter - Filter parameters consisting of complexity and categories.
+   * @param filter - Filter parameters consisting of complexity, categories and language.
    * @returns - A promise to queried document.
    */
   public findAll(page: IPagination, filter: {
     categories: Array<string>,
     complexity: string
+    language: Array<string>
   }): Promise<IQuestion[]> {
 
-    if (filter.categories == undefined && filter.complexity == undefined) {
-      if (filter.categories == undefined) {
-        return question.find({ deleted: false }, null, {
-          ...page
-        }).select('-description -deleted -deletedAt -template._id -template.code').exec();
+    if (!filter.categories && !filter.complexity && !filter.language) {
+      return question.find({ deleted: false }, null, { ...page })
+        .select('-description -deleted -deletedAt -template._id -template.code')
+        .exec();
+    }
+
+    if (!filter.categories) {
+      if (!filter.language) {
+        return question.find({
+          deleted: false,
+          complexity: filter.complexity
+        }, null, { ...page }).select('-description -deleted -deletedAt -template._id -template.code')
+          .exec();
       }
-    }
 
-    if (filter.categories != undefined && Array.isArray(filter.categories)) {
-      filter.categories.sort();
-    }
-
-    if (filter.complexity == undefined) {
       return question.find({
-        categories: { $in: filter.categories },
-        deleted: false
-      }, null, {
-        ...page
-      }).select('-description -deleted -deletedAt').exec();
+        deleted: false,
+        complexity: filter.complexity,
+        'template.langSlug':  { $all: filter.language },
+      }, null, { ...page }).select('-description -deleted -deletedAt -template._id -template.code')
+        .exec();
     }
 
-    return question.find({ ...filter, deleted: false }, null, {
-      ...page
-    });
+    if (!filter.language) {
+      return question.find({
+        deleted: false,
+        complexity: filter.complexity,
+        categories: { $all: filter.categories }
+      }, null, { ...page }).select('-description -deleted -deletedAt -template._id -template.code')
+        .exec();
+    }
+
+    return question.find({
+      deleted: false,
+      complexity: filter.complexity,
+      categories: { $all: filter.categories },
+      'template.langSlug':  { $all: filter.language },
+    }, null, { ...page }).select('-description -deleted -deletedAt -template._id -template.code')
+      .exec();
 
   }
 
@@ -99,7 +115,7 @@ export class QuestionService {
     }
 
     return result.filter(item => {
-      return item.template.some(t => t.langSlug === filter.language);
+      return item.template.some(t => filter.language.includes(t.langSlug));
     });
 
   }

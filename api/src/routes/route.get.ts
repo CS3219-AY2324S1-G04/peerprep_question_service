@@ -30,14 +30,17 @@ export class GetRoute extends Routes {
             let categories: Array<string> = req.query
               .categories as Array<string>;
 
+            let language: Array<string> = req.query.languages as Array<string>;
+
             const page : IPagination = {
                 limit: limit,
                 skip: offset,
             }
 
-            const filter: { complexity: string; categories: Array<string> } = {
+            const filter: { complexity: string; categories: Array<string>; language: Array<string> } = {
                 complexity: complexity,
                 categories: categories,
+                language: language
             };
 
             let question: IQuestion[];
