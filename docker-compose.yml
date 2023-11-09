@@ -45,6 +45,34 @@ services:
       - question_service_cache
     restart: on-failure
 
+  # Scheduled question deleter
+  question_service_scheduled_question_deleter:
+    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_scheduled_question_deleter
+    build:
+      context: .
+      dockerfile: ./dockerfiles/scheduled_question_deleter.dockerfile
+    networks:
+      - peerprep_network
+    command: /bin/sh -c "
+      apt-get update &&
+      apt-get upgrade -y &&
+      apt-get install cron -y &&
+      echo \"0 0 * * * node /peerprep_question_service_scheduled_question_deleter/jobs/scheduled_question_deleter.js\" >> temp_cron_file &&
+      crontab temp_cron_file &&
+      rm temp_cron_file &&
+      tail -f /dev/null" # This keeps the container running
+    environment:
+      MONGO_URI_LOCAL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
+      REDIS_HOST: question_service_cache
+      REDIS_DOCKER_PORT: 6379
+      USER_SERVICE_HOST: ${USER_SERVICE_HOST}
+      EXPRESS_DOCKER_PORT: 9001
+      NODE_ENV: ${NODE_ENV}
+    depends_on:
+      - question_service_database
+      - question_service_cache
+    restart: on-failure
+
   # REST API
   question_service_api:
     image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_api
