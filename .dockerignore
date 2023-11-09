@@ -1,0 +1,6 @@
+.dockerignore
+.vscode/
+docker_build/
+node_modules/
+dockerfiles/
+kubernetes/

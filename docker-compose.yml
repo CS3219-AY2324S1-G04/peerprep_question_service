@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   # Database
@@ -28,9 +28,9 @@ services:
   # Databse initialiser
   question_service_database_initialiser:
     image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_database_initialiser
-    # build:
-    #   context: .
-    #   dockerfile: ./dockerfiles/database_initaliser.dockerfile
+    build:
+      context: .
+      dockerfile: ./dockerfiles/database_initaliser.dockerfile
     networks:
       - peerprep_network
     environment:
@@ -48,9 +48,9 @@ services:
   # REST API
   question_service_api:
     image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_api
-    # build:
-    #   context: .
-    #   dockerfile: ./dockerfiles/api.dockerfile
+    build:
+      context: .
+      dockerfile: ./dockerfiles/api.dockerfile
     networks:
       - peerprep_network
     ports:
