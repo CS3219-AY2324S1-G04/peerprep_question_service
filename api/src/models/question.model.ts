@@ -2,9 +2,9 @@
  * @file Defines the Database Schema for the question service.
  * @author Irving de Boer
  */
-import {model, Schema} from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-import {IQuestion} from '../interface/question.interface';
+import { IQuestion } from '../interface/question.interface';
 
 const questionModel = new Schema({
   title: { type: String, required: [true, 'Field is required'] },
@@ -14,12 +14,16 @@ const questionModel = new Schema({
   template: [
     {
       language: { type: String, required: false },
-      langSlug: { type: String, required: false},
-      code: { type: String, required: false }
-    }
+      langSlug: { type: String, required: false },
+      code: { type: String, required: false },
+    },
   ],
-  deleted: { type: Boolean, default: false, required: [true, 'Field is required'] },
-  deletedAt: { type: Date, default: null }
+  deleted: {
+    type: Boolean,
+    default: false,
+    required: [true, 'Field is required'],
+  },
+  deletedAt: { type: Date, default: null },
 });
 
 export const question = model<IQuestion>('Question', questionModel);

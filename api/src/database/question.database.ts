@@ -5,13 +5,12 @@
 import {
   IFilter,
   IPagination,
-  IQuestion
+  IQuestion,
 } from '../interface/question.interface';
 import { question } from '../models/question.model';
 import { QuestionCache } from './question.cache';
 
 export class QuestionService {
-
   private _questionCache: QuestionCache;
 
   public constructor() {
@@ -21,55 +20,89 @@ export class QuestionService {
   /**
    * Retrieves all questions in the database.
    * @param page - Pagination parameters consisting of limit and offset.
-   * @param filter - Filter parameters consisting of complexity, categories and language.
+   * @param filter - Filter parameters consisting of complexity, categories and
+   * language.
+   * @param filter.categories - Array of categories.
+   * @param filter.complexity - Complexity type.
+   * @param filter.language - Array of languages.
    * @returns - A promise to queried document.
    */
-  public findAll(page: IPagination, filter: {
-    categories: Array<string>,
-    complexity: string
-    language: Array<string>
-  }): Promise<IQuestion[]> {
-
+  public findAll(
+    page: IPagination,
+    filter: {
+      categories: Array<string>;
+      complexity: string;
+      language: Array<string>;
+    },
+  ): Promise<IQuestion[]> {
     if (!filter.categories && !filter.complexity && !filter.language) {
-      return question.find({ deleted: false }, null, { ...page })
+      return question
+        .find({ deleted: false }, null, { ...page })
         .select('-description -deleted -deletedAt -template._id -template.code')
         .exec();
     }
 
     if (!filter.categories) {
       if (!filter.language) {
-        return question.find({
-          deleted: false,
-          complexity: filter.complexity
-        }, null, { ...page }).select('-description -deleted -deletedAt -template._id -template.code')
+        return question
+          .find(
+            {
+              deleted: false,
+              complexity: filter.complexity,
+            },
+            null,
+            { ...page },
+          )
+          .select(
+            '-description -deleted -deletedAt -template._id -template.code',
+          )
           .exec();
       }
 
-      return question.find({
-        deleted: false,
-        complexity: filter.complexity,
-        'template.langSlug':  { $all: filter.language },
-      }, null, { ...page }).select('-description -deleted -deletedAt -template._id -template.code')
+      return question
+        .find(
+          {
+            deleted: false,
+            complexity: filter.complexity,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'template.langSlug': { $all: filter.language },
+          },
+          null,
+          { ...page },
+        )
+        .select('-description -deleted -deletedAt -template._id -template.code')
         .exec();
     }
 
     if (!filter.language) {
-      return question.find({
-        deleted: false,
-        complexity: filter.complexity,
-        categories: { $all: filter.categories }
-      }, null, { ...page }).select('-description -deleted -deletedAt -template._id -template.code')
+      return question
+        .find(
+          {
+            deleted: false,
+            complexity: filter.complexity,
+            categories: { $all: filter.categories },
+          },
+          null,
+          { ...page },
+        )
+        .select('-description -deleted -deletedAt -template._id -template.code')
         .exec();
     }
 
-    return question.find({
-      deleted: false,
-      complexity: filter.complexity,
-      categories: { $all: filter.categories },
-      'template.langSlug':  { $all: filter.language },
-    }, null, { ...page }).select('-description -deleted -deletedAt -template._id -template.code')
+    return question
+      .find(
+        {
+          deleted: false,
+          complexity: filter.complexity,
+          categories: { $all: filter.categories },
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'template.langSlug': { $all: filter.language },
+        },
+        null,
+        { ...page },
+      )
+      .select('-description -deleted -deletedAt -template._id -template.code')
       .exec();
-
   }
 
   /**
@@ -94,30 +127,37 @@ export class QuestionService {
     let result: IQuestion[];
 
     if (filter.categories == undefined) {
-      result = await question.find({
-        complexity: filter.complexity,
-        deleted: false
-      })
-        .select(`-deleted -deletedAt -description
-     -categories -complexity`).exec();
+      result = await question
+        .find({
+          complexity: filter.complexity,
+          deleted: false,
+        })
+        .select(
+          `-deleted -deletedAt -description
+     -categories -complexity`,
+        )
+        .exec();
     } else {
-      result = await question.find({
-        complexity: filter.complexity,
-        categories: { '$in': filter.categories },
-        deleted: false
-      })
-        .select(`-deleted -deletedAt -description
-     -categories -complexity`).exec();
+      result = await question
+        .find({
+          complexity: filter.complexity,
+          categories: { $in: filter.categories },
+          deleted: false,
+        })
+        .select(
+          `-deleted -deletedAt -description
+     -categories -complexity`,
+        )
+        .exec();
     }
 
     if (result == undefined || result.length == 0) {
       return result;
     }
 
-    return result.filter(item => {
-      return item.template.some(t => filter.language.includes(t.langSlug));
+    return result.filter((item) => {
+      return item.template.some((t) => filter.language.includes(t.langSlug));
     });
-
   }
 
   /**
@@ -147,7 +187,8 @@ export class QuestionService {
           deletedAt: null,
         },
         { new: true },
-      ).select('-deleted -deletedAt')
+      )
+      .select('-deleted -deletedAt')
       .exec();
   }
 
@@ -177,39 +218,41 @@ export class QuestionService {
    * @returns - A promise to the deleted queried document.
    */
   public findAndDelete(id: string): Promise<IQuestion | null> {
-
     this._questionCache.clearCache();
 
-    return question.findByIdAndUpdate(id, {
-      deleted: true,
-      deletedAt: Date.now()
-    }).select('-deleted -deletedAt').exec();
+    return question
+      .findByIdAndUpdate(id, {
+        deleted: true,
+        deletedAt: Date.now(),
+      })
+      .select('-deleted -deletedAt')
+      .exec();
   }
 
   /**
-   * Deletes a question from the database based on whether it is marked as deleted and more than an hour has passed from
-   * deletedOn date
+   * Deletes questions from the database based on delete status.
    * @returns - A promise to the deleted documents.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public removeFromDatabase(): Promise<any> {
-
     const oneDayAgo = new Date();
     oneDayAgo.setDate(oneDayAgo.getDate() - 1);
-    return question.deleteMany({deleted: true, deletedAt: {$lte: oneDayAgo}}).exec();
+    return question
+      .deleteMany({ deleted: true, deletedAt: { $lte: oneDayAgo } })
+      .exec();
   }
 
   /**
    * Retrieves all categories from the database.
    * @returns - A promise to the queried document.
    */
-  public async getCategories() : Promise<Array<string>> {
-
+  public async getCategories(): Promise<Array<string>> {
     const categoriesCache = await this._questionCache.getCategories();
     if (categoriesCache) {
       return categoriesCache;
     }
 
-    const data : Array<string> = await question.distinct('categories').exec();
+    const data: Array<string> = await question.distinct('categories').exec();
 
     const sortedData = data.sort();
     this._questionCache.setCategories(sortedData);
@@ -219,26 +262,33 @@ export class QuestionService {
 
   /**
    * Retrieves all languages and respective langSlugs from the database.
-   * @returns - A promise to an array of objects containing language and langSlug.
+   * @returns - A promise to an array of objects containing language and
+   * langSlug.
    */
   public async getAllLanguages(): Promise<Array<IQuestion>> {
-
     const cacheRequest = await this._questionCache.getLanguages();
 
     if (cacheRequest != null) {
       return cacheRequest;
     }
 
-    const data: Array<IQuestion> = await question.distinct('template', { deleted: false }).exec();
+    const data: Array<IQuestion> = await question
+      .distinct('template', { deleted: false })
+      .exec();
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data.forEach((question: any) => {
       delete question._id;
       delete question.code;
     });
 
-    const languageData = data.filter((item: any, index, self: any[]) =>
-        index === self.findIndex((t) => (
-          t.language === item.language && t.langSlug === item.langSlug
-        ))
+    const languageData = data.filter(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (item: any, index, self: any[]) =>
+        index ===
+        self.findIndex(
+          (t) => t.language === item.language && t.langSlug === item.langSlug,
+        ),
     );
 
     // update redis cache

@@ -2,135 +2,156 @@
  * @file Handles get request endpoints.
  * @author Irving de Boer
  */
-import { Routes } from './routes';
-import { QuestionService } from '../database/question.database';
 import { Request, Response } from 'express';
-import { IPagination, IQuestion } from '../interface/question.interface';
+import { createClient } from 'redis';
 
+import { QuestionService } from '../database/question.database';
+import { IPagination, IQuestion } from '../interface/question.interface';
+import { Routes } from './routes';
 
 export class GetRoute extends Routes {
-    constructor(questionService: QuestionService, redis: any) {
-        super(questionService, redis);
-        this._setRoutes();
+  public constructor(
+    questionService: QuestionService,
+    redis: ReturnType<typeof createClient>,
+  ) {
+    super(questionService, redis);
+    this.setRoutes();
+  }
+  protected setRoutes() {
+    this.router.route('/questions').get(this._findAll);
+    this.router.route('/questions/:id').get(this._findOneById);
+    this.router.route('/question-matching/question').get(this._findByParams);
+    this.router.route('/categories').get(this._getCategories);
+    this.router.route('/languages').get(this._getAllLanguages);
+  }
+
+  private _findAll = async (req: Request, res: Response) => {
+    try {
+      const limit: number = Number(req.query.limit as string);
+      const offset: number = Number(req.query.offset as string);
+
+      const complexity: string = req.query.complexity as string;
+      const categories: Array<string> = req.query.categories as Array<string>;
+
+      const language: Array<string> = req.query.languages as Array<string>;
+
+      const page: IPagination = {
+        limit: limit,
+        skip: offset,
+      };
+
+      const filter: {
+        complexity: string;
+        categories: Array<string>;
+        language: Array<string>;
+      } = {
+        complexity: complexity,
+        categories: categories,
+        language: language,
+      };
+
+      const question = await this.questionService.findAll(page, filter);
+      res.status(200).send(this.getStandardResponse('success', question, null));
+    } catch (e) {
+      if (e instanceof Error) {
+        res.status(500).send(this.getErrorResponse(500, e.message));
+      }
     }
-    protected _setRoutes() {
-        this.router.route('/questions').get(this._findAll);
-        this.router.route('/questions/:id').get(this._findOneById);
-        this.router.route('/question-matching/question').get(this._findByParams);
-        this.router.route('/categories').get(this._getCategories);
-        this.router.route('/languages').get(this._getAllLanguages);
+  };
+
+  private _findOneById = async (req: Request, res: Response) => {
+    try {
+      const id: string = req.params.id;
+      const question = await this.questionService.findOneById(id);
+      if (question === null) {
+        res
+          .status(404)
+          .send(this.getErrorResponse(404, 'Question does not exist'));
+      } else {
+        res
+          .status(200)
+          .send(this.getStandardResponse('success', question, null));
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        res.status(500).send(this.getErrorResponse(500, e.message));
+      }
     }
+  };
 
-    private _findAll = async (req: Request, res: Response) => {
-        try {
-            const limit : number = Number(req.query.limit as string);
-            const offset : number = Number(req.query.offset as string);
+  private _findByParams = async (req: Request, res: Response) => {
+    try {
+      const complexity: string = req.query.complexity as string;
+      const categories: Array<string> = req.query.categories as Array<string>;
 
-            const complexity: string = req.query.complexity as string;
-            let categories: Array<string> = req.query
-              .categories as Array<string>;
+      const language: string = req.query.language as string;
 
-            let language: Array<string> = req.query.languages as Array<string>;
+      const isValidParams =
+        !req.query ||
+        !req.query.complexity ||
+        complexity === '' ||
+        !req.query.language ||
+        language === '';
 
-            const page : IPagination = {
-                limit: limit,
-                skip: offset,
-            }
+      if (isValidParams) {
+        res
+          .status(400)
+          .send(this.getErrorResponse(400, 'Missing parameters in query'));
+        return;
+      }
 
-            const filter: { complexity: string; categories: Array<string>; language: Array<string> } = {
-                complexity: complexity,
-                categories: categories,
-                language: language
-            };
+      const filter = {
+        complexity: complexity,
+        categories: categories,
+        language: language,
+      };
 
-            let question: IQuestion[];
+      const questionList = await this.questionService.findByParams(filter);
 
-            question = await this._questionService.findAll(page, filter);
-            res.status(200).send(this._getStandardResponse('success', question, null));
-        } catch (e) {
-            if (e instanceof Error) {
-                res.status(500).send(this._getErrorResponse(500, e.message));
-            }
-        }
-    };
+      const questionListLength = questionList.length;
+      const randomIndex = Math.floor(Math.random() * questionListLength);
+      const question: IQuestion = questionList[randomIndex];
 
-    private _findOneById = async (req: Request, res: Response) => {
-        try {
-            const id: string = req.params.id;
-            const question = await this._questionService.findOneById(id);
-            if (question === null) {
-                res.status(404).send(this._getErrorResponse(404, 'Question does not exist'));
-            } else {
-                res.status(200).send(this._getStandardResponse('success', question, null));
-            }
-        } catch (e) {
-            if (e instanceof Error) {
-                res.status(500).send(this._getErrorResponse(500, e.message));
-            }
-        }
-    };
+      if (question !== undefined) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        question.template = undefined;
+      }
 
-    private _findByParams = async (req: Request, res: Response) => {
-        try {
-            const complexity: string = req.query.complexity as string;
-            const categories: Array<string>  = req.query
-                .categories as Array<string>;
-
-            const language: string = req.query.language as string;
-
-            const isValidParams = !req.query || !req.query.complexity || complexity === '' || !req.query.language || language === '';
-
-            if (isValidParams) {
-                res
-                    .status(400)
-                    .send(this._getErrorResponse(400, 'Missing parameters in query'));
-                return;
-            }
-
-            const filter = {
-                complexity: complexity,
-                categories: categories,
-                language: language
-            };
-
-            const questionList = await this._questionService.findByParams(filter);
-
-            const questionListLength = questionList.length;
-            const randomIndex = Math.floor(Math.random() * questionListLength);
-            let question: any = questionList[randomIndex];
-
-            if (question !== undefined) {
-                question.template = undefined;
-            }
-
-            res.status(200).send(this._getStandardResponse('success', question, null));
-        } catch (e) {
-            if (e instanceof Error) {
-                res.status(500).send(this._getErrorResponse(500, e.message));
-            }
-        }
-    };
-
-    private _getCategories = async (req: Request, res: Response)=> {
-        try {
-            console.log("Method called");
-            const categories : Array<string> = await this._questionService.getCategories();
-            res.status(200).send(this._getStandardResponse('success', categories, null));
-        } catch (e) {
-            if (e instanceof Error) {
-                res.status(500).send(this._getErrorResponse(500, e.message));
-            }
-        }
-    };
-
-    private _getAllLanguages = async (req: Request, res: Response)=> {
-        try {
-            const languages : Array<any> = await this._questionService.getAllLanguages();
-            res.status(200).send(this._getStandardResponse('success', languages, null));
-        } catch (e) {
-            if (e instanceof Error) {
-                res.status(500).send(this._getErrorResponse(500, e.message));
-            }
-        }
+      res.status(200).send(this.getStandardResponse('success', question, null));
+    } catch (e) {
+      if (e instanceof Error) {
+        res.status(500).send(this.getErrorResponse(500, e.message));
+      }
     }
+  };
+
+  private _getCategories = async (req: Request, res: Response) => {
+    try {
+      console.log('Method called');
+      const categories: Array<string> =
+        await this.questionService.getCategories();
+      res
+        .status(200)
+        .send(this.getStandardResponse('success', categories, null));
+    } catch (e) {
+      if (e instanceof Error) {
+        res.status(500).send(this.getErrorResponse(500, e.message));
+      }
+    }
+  };
+
+  private _getAllLanguages = async (req: Request, res: Response) => {
+    try {
+      const languages: IQuestion[] =
+        await this.questionService.getAllLanguages();
+      res
+        .status(200)
+        .send(this.getStandardResponse('success', languages, null));
+    } catch (e) {
+      if (e instanceof Error) {
+        res.status(500).send(this.getErrorResponse(500, e.message));
+      }
+    }
+  };
 }

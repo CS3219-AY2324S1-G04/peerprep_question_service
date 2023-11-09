@@ -13,11 +13,12 @@ export interface IQuestion extends Document {
   complexity: string;
   template: [
     {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       _id: string;
       language: string;
       langSlug: string;
       code: string;
-    }
+    },
   ];
   deleted: boolean;
   deletedAt: Date;

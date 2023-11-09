@@ -3,24 +3,24 @@
  * @author Irving de Boer
  */
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express, { Application } from 'express';
 import mongoose from 'mongoose';
 import * as redis from 'redis';
 
+import {
+  MONGO_URI,
+  REDIS_HOST,
+  REDIS_PORT,
+} from './constants/question-service-api.constants';
 import { QuestionService } from './database/question.database';
-
-import cookieParser from 'cookie-parser';
+import { DeleteRoute } from './routes/route.delete';
 import { GetRoute } from './routes/route.get';
 import { PostRoute } from './routes/route.post';
 import { PutRoute } from './routes/route.put';
-import { DeleteRoute } from './routes/route.delete';
 import { Scheduler } from './tasks/tasks.schedule';
-import {
-  MONGO_URI,
-  REDIS_HOST, REDIS_PORT
-} from './constants/question-service-api.constants';
 
 dotenv.config();
 
@@ -31,7 +31,7 @@ class App {
   public constructor() {
     this.app = express();
     this.redis = redis.createClient({
-      url: `redis://${REDIS_HOST}:${REDIS_PORT}`
+      url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
     });
     this._setConfig();
     this._setMongoConfig();
@@ -40,11 +40,10 @@ class App {
   }
 
   private _setConfig() {
-
     const corsOptions = {
       origin: new RegExp('http://localhost:[0-9]+'),
       credentials: true,
-    }
+    };
 
     this.app.use(bodyParser.json({ limit: '50mb' }));
     this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
@@ -72,16 +71,15 @@ class App {
         status: 404,
         data: null,
         message: 'API endpoint not valid',
-    });
+      });
     });
   }
 
   private _setMongoConfig() {
-
     if (process.env.NODE_ENV !== 'test') {
-    mongoose
-      .connect(MONGO_URI, { ignoreUndefined: true })
-      .catch((error) => console.log(error));
+      mongoose
+        .connect(MONGO_URI, { ignoreUndefined: true })
+        .catch((error) => console.log(error));
     }
   }
 
@@ -89,7 +87,6 @@ class App {
     const scheduler = new Scheduler();
     scheduler.start();
   }
-
 }
 
 export default new App().app;
