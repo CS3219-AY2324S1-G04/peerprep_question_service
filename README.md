@@ -89,6 +89,7 @@ Retrieves all questions in the database.
 
 - `complexity` - The complexity of the question (Optional)
 - `categories` - The categories of the question (Optional) - Can be multiple
+- `languages` - The langSlug of the question (Optional)
 - `limit` - The max number of questions in response (Optional)
 - `offset` - The offset for the first question in response (Optional)
 
