@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: question-service-api-deployment
+  namespace: peerprep
+  labels:
+    app: question-service-api
+spec:
+  selector:
+    matchLabels:
+      app: question-service-api
+  template:
+    metadata:
+      namespace: peerprep
+      labels:
+        app: question-service-api
+    spec:
+      containers:
+        - name: question-service-api
+          image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_api
+          ports:
+            - containerPort: 9001
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: question-service-main-database-client-secret
+                  key: mongo-uri
+            - name: REDIS_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: question-service-cache-database-client-config-map
+                  key: redis-username
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: question-service-cache-database-client-secret
+                  key: redis-password
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: question-service-cache-database-client-config-map
+                  key: redis-host
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: question-service-cache-database-client-config-map
+                  key: redis-port
+            - name: REDIS_SHOULD_USE_TLS
+              valueFrom:
+                configMapKeyRef:
+                  name: question-service-cache-database-client-config-map
+                  key: redis-should-use-tls
+            - name: USER_SERVICE_HOST
+              value: user-service-api-service:9000
+            - name: API_PORT
+              value: '9001'
+            - name: NODE_ENV
+              value: production
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+            limits:
+              memory: 256Mi
+              cpu: 500m

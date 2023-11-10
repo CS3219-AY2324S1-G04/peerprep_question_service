@@ -1,55 +1,111 @@
 version: '3.8'
 
 services:
-  # REST API - Question Service
-  question_service_api:
-    container_name: question_service_api
-    image: peerprep_question_service_api
-    build: ./api
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-      # local->container
-      - ${EXPRESS_LOCAL_PORT}:${EXPRESS_DOCKER_PORT}
-    depends_on:
-      - question_service_db
-      - question_service_cache
+  # Database
+  question_service_database:
+    image: mongo:7-jammy
     networks:
-      - peerprep
-
-  # Database - Mongo DB
-  question_service_db:
-    container_name: question_service_db
-    image: mongo:latest
-    restart: unless-stopped
-    env_file:
-      - .env
+      - peerprep_network
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
       MONGODB_USER: ${MONGODB_USER}
       MONGODB_PASSWORD: ${MONGODB_PASSWORD}
       MONGO_DB: ${MONGO_DB}
-    ports:
-      - ${MONGODB_LOCAL_PORT}:${MONGODB_DOCKER_PORT}
     volumes:
       - ./mongodb/docker-entrypoint-initdb.d/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-    networks:
-      - peerprep
+    restart: unless-stopped
 
   # Redis Cache
   question_service_cache:
-    container_name: question_service_cache
-    image: redis:latest
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-      - ${REDIS_LOCAL_PORT}:${REDIS_DOCKER_PORT}
+    image: redis:7-bookworm
     networks:
-      - peerprep
+      - peerprep_network
+    command: /bin/sh -c "redis-server --requirepass $${REDIS_PASSWORD}"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    restart: unless-stopped
+
+  # Databse initialiser
+  question_service_database_initialiser:
+    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_database_initialiser
+    build:
+      context: .
+      dockerfile: ./dockerfiles/database_initialiser.dockerfile
+    networks:
+      - peerprep_network
+    environment:
+      MONGO_URI: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
+      REDIS_USERNAME: default
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_HOST: question_service_cache
+      REDIS_PORT: 6379
+      REDIS_SHOULD_USE_TLS: false
+      USER_SERVICE_HOST: ${USER_SERVICE_HOST}
+      API_PORT: 9001
+      NODE_ENV: ${NODE_ENV}
+    depends_on:
+      - question_service_database
+      - question_service_cache
+    restart: on-failure
+
+  # Scheduled question deleter
+  question_service_scheduled_question_deleter:
+    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_scheduled_question_deleter
+    build:
+      context: .
+      dockerfile: ./dockerfiles/scheduled_question_deleter.dockerfile
+    networks:
+      - peerprep_network
+    command: /bin/sh -c "
+      apt-get update &&
+      apt-get upgrade -y &&
+      apt-get install cron -y &&
+      echo \"0 0 * * * node /peerprep_question_service_scheduled_question_deleter/jobs/scheduled_question_deleter.js\" >> temp_cron_file &&
+      crontab temp_cron_file &&
+      rm temp_cron_file &&
+      tail -f /dev/null" # This keeps the container running
+    environment:
+      MONGO_URI: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
+      REDIS_USERNAME: default
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_HOST: question_service_cache
+      REDIS_PORT: 6379
+      REDIS_SHOULD_USE_TLS: false
+      USER_SERVICE_HOST: ${USER_SERVICE_HOST}
+      API_PORT: 9001
+      NODE_ENV: ${NODE_ENV}
+    depends_on:
+      - question_service_database
+      - question_service_cache
+    restart: on-failure
+
+  # REST API
+  question_service_api:
+    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_api
+    build:
+      context: .
+      dockerfile: ./dockerfiles/api.dockerfile
+    networks:
+      - peerprep_network
+    ports:
+      - ${API_EXPOSED_PORT}:9001
+    environment:
+      MONGO_URI: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
+      REDIS_USERNAME: default
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_HOST: question_service_cache
+      REDIS_PORT: 6379
+      REDIS_SHOULD_USE_TLS: false
+      USER_SERVICE_HOST: ${USER_SERVICE_HOST}
+      API_PORT: 9001
+      NODE_ENV: ${NODE_ENV}
+    depends_on:
+      - question_service_database
+      - question_service_cache
+    restart: unless-stopped
 
 networks:
-  peerprep:
+  peerprep_network:
+    name: peerprep
     external: true

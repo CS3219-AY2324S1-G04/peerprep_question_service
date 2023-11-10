@@ -18,6 +18,14 @@ export class QuestionService {
   }
 
   /**
+   * @returns True if there are no questions in the database. Otherwise, returns
+   * false.
+   */
+  public async isEmpty(): Promise<boolean> {
+    return (await question.findOne().exec()) != null;
+  }
+
+  /**
    * Retrieves all questions in the database.
    * @param page - Pagination parameters consisting of limit and offset.
    * @param filter - Filter parameters consisting of complexity, categories and
