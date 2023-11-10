@@ -45,6 +45,8 @@ Note that Question Service relies on User Service. Please ensure that User Servi
 
 ## Docker Images
 
+Note that if you are using Docker compose with the provided "docker-compose.yaml" file, the `MONGO_URI` environment variable (utilised by the images specified below) is specified indirectly in the ".env" file via the `MONGODB_USER`, `MONGODB_PASSWORD`, and `MONGO_DB` environment variables.
+
 ### API
 
 **Name:** ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_api
