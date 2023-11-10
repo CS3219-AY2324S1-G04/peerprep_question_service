@@ -3,20 +3,25 @@
  */
 import * as redis from 'redis';
 
+import {
+  REDIS_HOST,
+  REDIS_PASSWORD,
+  REDIS_PORT,
+  REDIS_SHOULD_USE_TLS,
+  REDIS_USERNAME,
+} from '../constants/question-service-api.constants';
 import { IQuestion } from '../interface/question.interface';
 
 export class QuestionCache {
   public client;
 
   public constructor() {
-    const username: string = encodeURIComponent(
-      process.env.REDIS_USERNAME ?? '',
-    );
-    const password: string = encodeURI(process.env.REDIS_PASSWORD ?? '');
+    const username: string = encodeURIComponent(REDIS_USERNAME);
+    const password: string = encodeURI(REDIS_PASSWORD);
 
     this.client = redis.createClient({
-      url: `redis://${username}:${password}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-      socket: { tls: process.env.REDIS_SHOULD_USE_TLS === 'true' },
+      url: `redis://${username}:${password}@${REDIS_HOST}:${REDIS_PORT}`,
+      socket: { tls: REDIS_SHOULD_USE_TLS },
     });
 
     this._setRedisConfig();
