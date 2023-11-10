@@ -31,7 +31,7 @@ services:
     image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_database_initialiser
     build:
       context: .
-      dockerfile: ./dockerfiles/database_initaliser.dockerfile
+      dockerfile: ./dockerfiles/database_initialiser.dockerfile
     networks:
       - peerprep_network
     environment:
