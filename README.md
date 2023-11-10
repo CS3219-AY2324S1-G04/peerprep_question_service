@@ -1,19 +1,20 @@
 # PeerPrep Question Service
 
 Handles the storing retrieving, updating and deleting of questions.
-
+<!--
 The `docker-compose.yml` file starts 2 Docker containers.
 
 - `mongo-db` - NoSQL Database for storing question repository.
-- `api` - REST API for interacting with the database.
+- `api` - REST API for interacting with the database. -->
 
 ## Table of Contents
 
 - [Quickstart Guide](#quickstart-guide)
-- [Environment Variables](#environment-variables)
-  - [Common](#common)
-  - [Database](#database)
+- [Build Script](#build-script)
+- [Docker Images](#docker-images)
   - [API](#api)
+  - [Database Initialiser](#database-initialiser)
+  - [Scheduled Question Deleter](#scheduled-question-deleter)
 - [REST API](#rest-api)
   - [Response Format](#response-format)
   - [Retrieve All Questions](#retrieve-all-questions)
@@ -27,31 +28,55 @@ The `docker-compose.yml` file starts 2 Docker containers.
 
 ## Quickstart Guide
 
-1. Clone the repository.
-2. Create `.env` file with specified variables. Refer to [Environment Variables](#environment-variables) for a list of configs.
-3. Change directory to `api` directory and run `npm install` to install necessary dependencies.
-4. Create and start Docker containers by running command `docker compose up -d`.
+Note that Question Service relies on User Service. Please ensure that User Service is up and running before attempting to start Question Service.
 
-## Environment Variables
+1. Clone this repository.
+2. Build the docker images by running: `./build_images.sh`
+3. Modify the ".env" file as per needed. Refer to [Docker Images](#docker-images) for the list of environment variables.
+4. Create the docker containers by running: `docker compose up`
 
-### Common
+## Build Script
 
-These environment variables are used by both the API and database images.
+`build_images.sh` is a build script for building the Docker images and optionally pushing them to the container registry. To get more information about the script, run:
 
-- `MONGODB_PASSWORD` - Password of the database.
-- `MONGODB_USER` - User on the database host.
-- `MONGODB_HOST` - Name of the database.
+```
+./build_images.sh -h
+```
 
-### Database
-
-- `MONGODB_DOCKER_PORT` - Docker Port for Database.
-- `MONGODB_LOCAL_PORT` - Local Port for Database.
+## Docker Images
 
 ### API
 
-- `EXPRESS_DOCKER_PORT` - Docker Port for REST API.
-- `EXPRESS_LOCAL_PORT` - Local Port for REST API.
-- `USER_SERVICE_HOST` - Hostname of User Service.
+**Name:** ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_api
+
+**Description:** Runs the REST API.
+
+**Environment Variables:**
+- `MONGO_URI` - URI for connecting to the Mongo database (the main database).
+- `REDIS_USERNAME` - Username for the Redis database (the caching database).
+- `REDIS_PASSWORD` - Password for the Redis database (the caching database).
+- `REDIS_HOST` - Address of the Redis database host (the caching database).
+- `REDIS_PORT` - Port of the Redis database host (the caching database).
+- `REDIS_SHOULD_USE_TLS` - Should the Redis database connection be secured with TLS. Set to "true" to enable.
+- `USER_SERVICE_HOST` - Address and port of the User Service host in the format `ADDRESS:PORT`.
+- `API_PORT` - Port to listen on.
+- `NODE_ENV` - Mode the app is running on ("development" or "production").
+
+### Database Initialiser
+
+**Name:** ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_database_initialiser
+
+**Description:** Initialises the database by creating the predefined questions (if the database is empty).
+
+**Environment Variables:** Same as [API](#api).
+
+### Scheduled Question Deleter
+
+**Name:** ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_scheduled_question_deleter
+
+**Description:** Deletes questions from the database that are scheduled to be deleted. This image is intended to be run once every day.
+
+**Environment Variables:** Same as [API](#api).
 
 ## REST API
 
