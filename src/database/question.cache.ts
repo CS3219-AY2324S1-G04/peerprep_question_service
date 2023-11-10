@@ -15,7 +15,7 @@ export class QuestionCache {
     const password: string = encodeURI(process.env.REDIS_PASSWORD ?? '');
 
     this.client = redis.createClient({
-      url: `redis://${username}:${password}@${process.env.REDIS_HOST}:${process.env.REDIS_DOCKER_PORT}`,
+      url: `redis://${username}:${password}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
       socket: { tls: process.env.REDIS_SHOULD_USE_TLS === 'true' },
     });
 

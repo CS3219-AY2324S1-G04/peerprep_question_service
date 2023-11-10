@@ -21,7 +21,7 @@ spec:
           ports:
             - containerPort: 9001
           env:
-            - name: MONGO_URI_LOCAL
+            - name: MONGO_URI
               valueFrom:
                 secretKeyRef:
                   name: question-service-main-database-client-secret
@@ -41,7 +41,7 @@ spec:
                 configMapKeyRef:
                   name: question-service-cache-database-client-config-map
                   key: redis-host
-            - name: REDIS_DOCKER_PORT
+            - name: REDIS_PORT
               valueFrom:
                 configMapKeyRef:
                   name: question-service-cache-database-client-config-map
@@ -53,7 +53,7 @@ spec:
                   key: redis-should-use-tls
             - name: USER_SERVICE_HOST
               value: user-service-api-service:9000
-            - name: EXPRESS_DOCKER_PORT
+            - name: API_PORT
               value: '9001'
             - name: NODE_ENV
               value: production

@@ -35,14 +35,14 @@ services:
     networks:
       - peerprep_network
     environment:
-      MONGO_URI_LOCAL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
+      MONGO_URI: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
       REDIS_USERNAME: default
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_HOST: question_service_cache
-      REDIS_DOCKER_PORT: 6379
+      REDIS_PORT: 6379
       REDIS_SHOULD_USE_TLS: false
       USER_SERVICE_HOST: ${USER_SERVICE_HOST}
-      EXPRESS_DOCKER_PORT: 9001
+      API_PORT: 9001
       NODE_ENV: ${NODE_ENV}
     depends_on:
       - question_service_database
@@ -66,14 +66,14 @@ services:
       rm temp_cron_file &&
       tail -f /dev/null" # This keeps the container running
     environment:
-      MONGO_URI_LOCAL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
+      MONGO_URI: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
       REDIS_USERNAME: default
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_HOST: question_service_cache
-      REDIS_DOCKER_PORT: 6379
+      REDIS_PORT: 6379
       REDIS_SHOULD_USE_TLS: false
       USER_SERVICE_HOST: ${USER_SERVICE_HOST}
-      EXPRESS_DOCKER_PORT: 9001
+      API_PORT: 9001
       NODE_ENV: ${NODE_ENV}
     depends_on:
       - question_service_database
@@ -89,16 +89,16 @@ services:
     networks:
       - peerprep_network
     ports:
-      - ${EXPRESS_LOCAL_PORT}:9001
+      - ${API_EXPOSED_PORT}:9001
     environment:
-      MONGO_URI_LOCAL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
+      MONGO_URI: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@question_service_database:27017/${MONGO_DB}?authSource=admin
       REDIS_USERNAME: default
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_HOST: question_service_cache
-      REDIS_DOCKER_PORT: 6379
+      REDIS_PORT: 6379
       REDIS_SHOULD_USE_TLS: false
       USER_SERVICE_HOST: ${USER_SERVICE_HOST}
-      EXPRESS_DOCKER_PORT: 9001
+      API_PORT: 9001
       NODE_ENV: ${NODE_ENV}
     depends_on:
       - question_service_database
