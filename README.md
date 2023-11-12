@@ -36,12 +36,6 @@ Handles the storing retrieving, updating and deleting of questions.
 
 ![](./images/architecture-1.jpg)
 
-<!--
-TODO: Please complete the architecture diagram in "images/architecture.drawio", then export it as a jpg file.
-
-The diagram is missing the cache database.
--->
-
 Legend:
 
 - Start of arrow indicates request origin and end of arrow indicates request destination.
