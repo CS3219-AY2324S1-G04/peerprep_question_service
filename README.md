@@ -1,20 +1,18 @@
 # PeerPrep Question Service
 
 Handles the storing retrieving, updating and deleting of questions.
-<!--
-The `docker-compose.yml` file starts 2 Docker containers.
-
-- `mongo-db` - NoSQL Database for storing question repository.
-- `api` - REST API for interacting with the database. -->
 
 ## Table of Contents
 
-- [Quickstart Guide](#quickstart-guide)
 - [Build Script](#build-script)
+- [Architecture](#architecture)
 - [Docker Images](#docker-images)
   - [API](#api)
   - [Database Initialiser](#database-initialiser)
   - [Scheduled Question Deleter](#scheduled-question-deleter)
+- [Deployment](#deployment)
+  - [Kubernetes Deployment](#kubernetes-deployment)
+  - [Docker Compose Deployment](#docker-compose-deployment)
 - [REST API](#rest-api)
   - [Response Format](#response-format)
   - [Retrieve All Questions](#retrieve-all-questions)
@@ -26,15 +24,6 @@ The `docker-compose.yml` file starts 2 Docker containers.
   - [Get Categories](#get-categories)
   - [Get Languages](#get-languages)
 
-## Quickstart Guide
-
-Note that Question Service relies on User Service. Please ensure that User Service is up and running before attempting to start Question Service.
-
-1. Clone this repository.
-2. Build the docker images by running: `./build_images.sh`
-3. Modify the ".env" file as per needed. Refer to [Docker Images](#docker-images) for the list of environment variables.
-4. Create the docker containers by running: `docker compose up`
-
 ## Build Script
 
 `build_images.sh` is a build script for building the Docker images and optionally pushing them to the container registry. To get more information about the script, run:
@@ -42,6 +31,52 @@ Note that Question Service relies on User Service. Please ensure that User Servi
 ```
 ./build_images.sh -h
 ```
+
+## Architecture
+
+![](./images/architecture.jpg)
+
+<!--
+TODO: Please complete the architecture diagram in "images/architecture.drawio", then export it as a jpg file.
+
+The diagram is missing the cache database.
+-->
+
+Legend:
+
+- Start of arrow indicates request origin and end of arrow indicates request destination.
+- `#505050` Dark grey items represents internal servers/containers.
+- `#DA4026` Red items represents internal servers/containers that are temporary.
+- `#7FBA42` Green items represents internal servers/containers that are exposed.
+- `#2072B8` Blue items represents external servers/containers.
+
+**REST API Server**
+
+- Handles REST API requests.
+- Exposed to clients/servers outside the service.
+- Can be scaled horizontally.
+- Corresponds to the [API](#api) docker image.
+
+**Database Initialiser**
+
+- Populates the main database with predefined questions.
+- Does nothing if the main database already contains one or more documents in the target collection.
+- Shuts down once it is done initialising the main database.
+- Corresponds to the [Database Initialiser](#database-initialiser) docker image.
+
+**Scheduled Question Deleter**
+
+- Periodically deletes all questions that are scheduled to be deleted.
+- Should be scheduled to run periodically (e.g. once a day via a Cronjob)
+- Corresponds to the [Scheduled Question Deleter](#scheduled-question-deleter) docker image.
+
+**Main Database**
+
+- Database for storing question information.
+
+**Cache Database**
+
+- Database for caching question information for fast retrieval.
 
 ## Docker Images
 
@@ -79,6 +114,52 @@ Note that if you are using Docker compose with the provided "docker-compose.yaml
 **Description:** Deletes questions from the database that are scheduled to be deleted. This image is intended to be run once every day.
 
 **Environment Variables:** Same as [API](#api).
+
+## Deployment
+
+### Kubernetes Deployment
+
+This is the main deployment method for production.
+
+**Note:**
+
+- The database is hosted externally, not within the Kubernetes cluster.
+
+**Prerequisite**
+
+- Docker images must be pushed to the container registry and made public.
+  - To push to the container registry (assuming one has the necessary permissions), run: `./build_images.sh -p`
+  - To make the images public, change the visibility of the image on [GitHub](https://github.com/orgs/CS3219-AY2324S1-G04/packages).
+- Kubernetes cluster must be setup as specified in the [main repository](https://github.com/CS3219-AY2324S1/ay2324s1-course-assessment-g04#deployment).
+- User Service must be deployed within the Kubernetes cluster.
+
+**Steps:**
+
+1. Ensure the "peerprep" namespace has been created: `kubectl create namespace peerprep`
+2. Navigate to the "kubernetes" directory: `cd kubernetes`
+3. Deploy the Kubernetes objects: `./deploy.sh`
+    - To delete the Kubernetes objects, run: `./delete.sh`
+
+### Docker Compose Deployment
+
+This is intended for development use only. It is meant to make developing other services easier.
+
+**Note:**
+
+- No horizontal auto scaling is provided.
+- The database is created by Docker compose and data is not backed up.
+
+**Prerequisite**
+
+- Docker images must be built.
+  - To build the images, run: `./build_images.sh`
+- User Service must be deployed via Docker compose.
+
+**Steps:**
+
+1. Ensure that the "peerprep" network exist: `docker network create -d bridge peerprep`
+2. Create the docker containers: `docker compose up`
+    - To delete the docker containers, run: `docker compose down`
 
 ## REST API
 
