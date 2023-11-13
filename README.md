@@ -34,7 +34,7 @@ Handles the storing retrieving, updating and deleting of questions.
 
 ## Architecture
 
-![](./images/architecture-1.jpg)
+![](./images/architecture.jpg)
 
 Legend:
 
