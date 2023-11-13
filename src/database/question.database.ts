@@ -22,7 +22,7 @@ export class QuestionService {
    * false.
    */
   public async isEmpty(): Promise<boolean> {
-    return (await question.findOne().exec()) != null;
+    return (await question.findOne().exec()) == null;
   }
 
   /**

@@ -15,7 +15,7 @@ async function initialise(): Promise<void> {
 
   const questionService: QuestionService = new QuestionService();
 
-  if (await questionService.isEmpty()) {
+  if (!(await questionService.isEmpty())) {
     console.log('The database already contains some questions.');
     console.log('Initialisation aborted!');
 
