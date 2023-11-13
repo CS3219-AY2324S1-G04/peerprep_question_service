@@ -4,7 +4,10 @@ metadata:
   name: question-service-cache-database-client-config-map
   namespace: peerprep
 data:
-  redis-username: default
+  redis-username: question-service
   redis-host: redis-12168.c295.ap-southeast-1-1.ec2.cloud.redislabs.com
   redis-port: '12168'
+
+  # This value should be "true" for actual deployment. The reason why it is
+  # "false" is due to free tier database limitations.
   redis-should-use-tls: 'false'
