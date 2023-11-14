@@ -1,6 +1,8 @@
 # PeerPrep Question Service
 
-Handles the storing retrieving, updating and deleting of questions.
+Manages questions.
+
+Provides endpoints for CRUD operations with regards to question information.
 
 ## Table of Contents
 
@@ -47,7 +49,6 @@ Legend:
 **REST API Server**
 
 - Handles REST API requests.
-- Exposed to clients/servers outside the service.
 - Can be scaled horizontally.
 - Corresponds to the [API](#api) docker image.
 
@@ -61,7 +62,7 @@ Legend:
 **Scheduled Question Deleter**
 
 - Periodically deletes all questions that are scheduled to be deleted.
-- Should be scheduled to run periodically (e.g. once a day via a Cronjob)
+- Should be scheduled to run periodically (e.g. once a day via a Cronjob).
 - Corresponds to the [Scheduled Question Deleter](#scheduled-question-deleter) docker image.
 
 **Main Database**
@@ -74,8 +75,6 @@ Legend:
 
 ## Docker Images
 
-Note that if you are using Docker compose with the provided "docker-compose.yaml" file, the `MONGO_URI` environment variable (utilised by the images specified below) is specified indirectly in the ".env" file via the `MONGODB_USER`, `MONGODB_PASSWORD`, and `MONGO_DB` environment variables.
-
 ### API
 
 **Name:** ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_api
@@ -87,7 +86,7 @@ Note that if you are using Docker compose with the provided "docker-compose.yaml
 - `REDIS_USERNAME` - Username for the Redis database (the caching database).
 - `REDIS_PASSWORD` - Password for the Redis database (the caching database).
 - `REDIS_HOST` - Address of the Redis database host (the caching database).
-- `REDIS_PORT` - Port of the Redis database host (the caching database).
+- `REDIS_PORT` - Port the Redis database (the caching database) is listening on.
 - `REDIS_SHOULD_USE_TLS` - Should the Redis database connection be secured with TLS. Set to "true" to enable.
 - `USER_SERVICE_HOST` - Address and port of the User Service host in the format `ADDRESS:PORT`.
 - `API_PORT` - Port to listen on.
@@ -117,7 +116,7 @@ This is the main deployment method for production.
 
 **Note:**
 
-- The database is hosted externally, not within the Kubernetes cluster.
+- The databases are hosted externally, not within the Kubernetes cluster.
 
 **Prerequisite**
 
