@@ -37,7 +37,7 @@ export class DeleteRoute extends Routes {
           .send(this.getErrorResponse(407, 'Invalid session token'));
       }
 
-      if (userStatus === 407) {
+      if (userStatus === 403) {
         return res
           .status(403)
           .send(
