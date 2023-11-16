@@ -50,8 +50,9 @@ class App {
     this.app.use(cookieParser());
   }
 
-  private _setControllers() {
+  private async _setControllers() {
     // Creating a new instance of Question Controller
+    await this._setPrivateKey();
     const questionService = new QuestionService();
     const authRoutes = new AuthRoute(questionService, this.redis);
     const getRoutes = new GetRoute(questionService, this.redis);
@@ -83,6 +84,25 @@ class App {
         .catch((error) => console.log(error));
     }
   }
+
+  private _setPrivateKey = async () => {
+    try {
+      const response = await fetch(
+        `http://${process.env.USER_SERVICE_HOST}/user-service/access-token-public-key`,
+      );
+
+      if (response.status !== 200) {
+        process.env.JWT_KEY = '';
+      } else {
+        process.env['JWT_KEY'] = await response.text();
+        console.log(process.env.JWT_KEY);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+  };
 }
 
 export default new App().app;
