@@ -228,13 +228,7 @@ export class QuestionService {
   public findAndDelete(id: string): Promise<IQuestion | null> {
     this._questionCache.clearCache();
 
-    return question
-      .findByIdAndUpdate(id, {
-        deleted: true,
-        deletedAt: Date.now(),
-      })
-      .select('-deleted -deletedAt')
-      .exec();
+    return question.findByIdAndDelete(id).select('-deleted -deletedAt').exec();
   }
 
   /**

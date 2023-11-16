@@ -27,27 +27,6 @@ export class PutRoute extends Routes {
       const questionId: string = req.params.id;
       const body: IQuestion = req.body;
 
-      const sessionToken: string = req.cookies['session-token'];
-
-      const userStatus = await this.checkUserRole(sessionToken);
-
-      if (userStatus === 401) {
-        return res
-          .status(407)
-          .send(this.getErrorResponse(407, 'Invalid session token'));
-      }
-
-      if (userStatus === 403) {
-        return res
-          .status(403)
-          .send(
-            this.getErrorResponse(
-              403,
-              'Unauthorised. Only users with role type of admin or maintainer may perform this role.',
-            ),
-          );
-      }
-
       const question = await this.questionService.findAndUpdate(
         questionId,
         body,
