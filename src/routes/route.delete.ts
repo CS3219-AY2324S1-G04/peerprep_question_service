@@ -37,12 +37,12 @@ export class DeleteRoute extends Routes {
           .send(this.getErrorResponse(407, 'Invalid session token'));
       }
 
-      if (userStatus === 403) {
+      if (userStatus === 407) {
         return res
-          .status(403)
+          .status(407)
           .send(
             this.getErrorResponse(
-              403,
+              407,
               'Unauthorised. Only users with role type of admin or maintainer may perform this role.',
             ),
           );
