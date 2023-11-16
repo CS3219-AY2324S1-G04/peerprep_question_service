@@ -58,12 +58,11 @@ export class AuthRoute extends Routes {
 
   private _checkUserValid(accessToken: string) {
     try {
-      if (process.env.JWT_TOKEN === '') {
+      if (process.env.JWT_TOKEN === '' || process.env.JWT_TOKEN === undefined) {
         return { status: 500, message: 'Internal Server Error' };
       }
 
-      console.log(process.env.JWT_TOKEN);
-      jwt.verify(accessToken, process.env.JWT_TOKEN!);
+      jwt.verify(accessToken, process.env.JWT_TOKEN);
       return { status: 200, message: 'Valid access token' };
     } catch (error) {
       if (error instanceof Error) {

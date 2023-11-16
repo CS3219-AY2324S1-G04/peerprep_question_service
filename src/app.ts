@@ -92,10 +92,9 @@ class App {
       );
 
       if (response.status !== 200) {
-        process.env.JWT_KEY = '';
+        process.env.JWT_TOKEN = '';
       } else {
-        process.env['JWT_KEY'] = await response.text();
-        console.log(process.env.JWT_KEY);
+        process.env.JWT_TOKEN = await response.text();
       }
     } catch (error) {
       if (error instanceof Error) {
