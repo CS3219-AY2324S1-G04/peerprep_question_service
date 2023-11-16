@@ -16,6 +16,7 @@ import {
   REDIS_PORT,
 } from './constants/question-service-api.constants';
 import { QuestionService } from './database/question.database';
+import { AuthRoute } from './routes/route.auth';
 import { DeleteRoute } from './routes/route.delete';
 import { GetRoute } from './routes/route.get';
 import { PostRoute } from './routes/route.post';
@@ -52,12 +53,14 @@ class App {
   private _setControllers() {
     // Creating a new instance of Question Controller
     const questionService = new QuestionService();
+    const authRoutes = new AuthRoute(questionService, this.redis);
     const getRoutes = new GetRoute(questionService, this.redis);
     const postRoutes = new PostRoute(questionService, this.redis);
     const putRoutes = new PutRoute(questionService, this.redis);
     const deleteRoutes = new DeleteRoute(questionService, this.redis);
 
     // Telling express to use our Controller's routes
+    this.app.use('/question-service', authRoutes.router);
     this.app.use('/question-service', getRoutes.router);
     this.app.use('/question-service', postRoutes.router);
     this.app.use('/question-service', putRoutes.router);
