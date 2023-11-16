@@ -39,10 +39,10 @@ export class DeleteRoute extends Routes {
 
       if (userStatus === 407) {
         return res
-          .status(407)
+          .status(403)
           .send(
             this.getErrorResponse(
-              407,
+              403,
               'Unauthorised. Only users with role type of admin or maintainer may perform this role.',
             ),
           );
