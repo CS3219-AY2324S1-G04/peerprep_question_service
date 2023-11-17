@@ -10,11 +10,19 @@ import { IPagination, IQuestion } from '../interface/question.interface';
 import { Routes } from './routes';
 
 export class GetRoute extends Routes {
+  private _categories: string[] = [];
+  private _languages: Array<IQuestion> = [];
   public constructor(
     questionService: QuestionService,
     redis: ReturnType<typeof createClient>,
+    languages: Array<IQuestion>,
+    categories: Array<string>,
   ) {
     super(questionService, redis);
+    this._categories = categories;
+    this._languages = languages;
+    console.log(this._languages);
+    console.log(this._categories);
     this.setRoutes();
   }
   protected setRoutes() {
@@ -128,9 +136,7 @@ export class GetRoute extends Routes {
 
   private _getCategories = async (req: Request, res: Response) => {
     try {
-      console.log('Method called');
-      const categories: Array<string> =
-        await this.questionService.getCategories();
+      const categories: Array<string> = this._categories;
       res
         .status(200)
         .send(this.getStandardResponse('success', categories, null));
@@ -143,8 +149,7 @@ export class GetRoute extends Routes {
 
   private _getAllLanguages = async (req: Request, res: Response) => {
     try {
-      const languages: IQuestion[] =
-        await this.questionService.getAllLanguages();
+      const languages: IQuestion[] = this._languages;
       res
         .status(200)
         .send(this.getStandardResponse('success', languages, null));
