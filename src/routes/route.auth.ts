@@ -42,10 +42,10 @@ export class AuthRoute extends Routes {
       const userStatus = this._checkUserValid(accessToken);
       console.log(userStatus.message);
 
-      if (userStatus.status === 401) {
+      if (userStatus.status !== 200) {
         return res
-          .status(401)
-          .send(this.getErrorResponse(401, userStatus.message));
+          .status(userStatus.status)
+          .send(this.getErrorResponse(userStatus.status, userStatus.message));
       }
 
       return next();
