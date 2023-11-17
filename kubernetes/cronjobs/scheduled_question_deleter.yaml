@@ -15,7 +15,7 @@ spec:
         spec:
           containers:
             - name: question-service-scheduled-question-deleter
-              image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_scheduled_question_deleter
+              image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_scheduled_question_deleter:demo
               env:
                 - name: MONGO_URI
                   valueFrom:
