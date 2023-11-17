@@ -16,6 +16,7 @@ import {
   REDIS_PORT,
 } from './constants/question-service-api.constants';
 import { QuestionService } from './database/question.database';
+import { IQuestion } from './interface/question.interface';
 import { DeleteRoute } from './routes/route.delete';
 import { GetRoute } from './routes/route.get';
 import { PostRoute } from './routes/route.post';
@@ -26,6 +27,8 @@ dotenv.config();
 class App {
   public app: Application;
   public redis;
+  private _categories: string[] = [];
+  private _languages: Array<IQuestion> = [];
 
   public constructor() {
     this.app = express();
@@ -49,10 +52,18 @@ class App {
     this.app.use(cookieParser());
   }
 
-  private _setControllers() {
+  private async _setControllers() {
     // Creating a new instance of Question Controller
     const questionService = new QuestionService();
-    const getRoutes = new GetRoute(questionService, this.redis);
+
+    await this._configureQuestion(questionService);
+    await this._configureLanguage(questionService);
+    const getRoutes = new GetRoute(
+      questionService,
+      this.redis,
+      this._languages,
+      this._categories,
+    );
     const postRoutes = new PostRoute(questionService, this.redis);
     const putRoutes = new PutRoute(questionService, this.redis);
     const deleteRoutes = new DeleteRoute(questionService, this.redis);
@@ -79,6 +90,15 @@ class App {
         .connect(MONGO_URI, { ignoreUndefined: true })
         .catch((error) => console.log(error));
     }
+  }
+  private async _configureQuestion(questionService: QuestionService) {
+    this._categories = await questionService.getCategories();
+    console.log(this._categories);
+  }
+
+  private async _configureLanguage(questionService: QuestionService) {
+    this._languages = await questionService.getAllLanguages();
+    console.log(this._languages);
   }
 }
 
