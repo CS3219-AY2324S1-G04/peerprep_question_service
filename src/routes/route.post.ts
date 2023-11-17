@@ -38,6 +38,11 @@ export class PostRoute extends Routes {
         );
     } catch (e) {
       if (e instanceof Error) {
+        if (e.message.includes('Question already exists')) {
+          res
+            .status(409)
+            .send(this.getErrorResponse(409, 'Question title already exists'));
+        }
         res.status(500).send(this.getErrorResponse(500, e.message));
       }
     }
