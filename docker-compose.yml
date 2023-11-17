@@ -28,7 +28,7 @@ services:
 
   # Databse initialiser
   question_service_database_initialiser:
-    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_database_initialiser
+    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_database_initialiser:demo
     build:
       context: .
       dockerfile: ./dockerfiles/database_initialiser.dockerfile
@@ -51,7 +51,7 @@ services:
 
   # Scheduled question deleter
   question_service_scheduled_question_deleter:
-    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_scheduled_question_deleter
+    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_scheduled_question_deleter:demo
     build:
       context: .
       dockerfile: ./dockerfiles/scheduled_question_deleter.dockerfile
@@ -82,7 +82,7 @@ services:
 
   # REST API
   question_service_api:
-    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_api
+    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_question_service_api:demo
     build:
       context: .
       dockerfile: ./dockerfiles/api.dockerfile
