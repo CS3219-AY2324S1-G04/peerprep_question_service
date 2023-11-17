@@ -205,9 +205,13 @@ export class QuestionService {
    * @param body - The JSON object representing the HTTP request body.
    * @returns - Inserted document.
    */
-  public addQuestion(body: IQuestion): Promise<IQuestion | null> {
+  public async addQuestion(body: IQuestion): Promise<IQuestion | null> {
     body.categories.sort();
     this._questionCache.clearCache();
+
+    if (await question.findOne({ title: body.title }).exec()) {
+      throw new Error('Question already exists');
+    }
 
     return question.create({
       title: body.title,
