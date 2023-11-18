@@ -43,7 +43,7 @@ export class AuthRoute extends Routes {
       console.log(userStatus.message);
 
       if (userStatus.status !== 200) {
-        return res
+        res
           .status(userStatus.status)
           .send(this.getErrorResponse(userStatus.status, userStatus.message));
       }

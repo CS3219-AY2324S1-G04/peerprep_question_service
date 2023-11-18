@@ -93,12 +93,14 @@ class App {
 
       if (response.status !== 200) {
         process.env.JWT_TOKEN = '';
+        process.exit(1);
       } else {
         process.env.JWT_TOKEN = await response.text();
       }
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
+        process.exit(1);
       }
     }
   };
